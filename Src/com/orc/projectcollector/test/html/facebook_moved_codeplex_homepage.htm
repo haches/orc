@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://facebooksdk.codeplex.com/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="Chrome "><head id="ctl00_ctl00_HeadTag"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta id="ctl00_ctl00_CompatabilityMode" http-equiv="X-UA-Compatible" content="IE=edge"><link id="ctl00_ctl00_MasterCss" type="text/css" rel="stylesheet" href="./Facebook C# SDK_files/StyleSheet.ashx"><link rel="SHORTCUT ICON" href="http://facebooksdk.codeplex.com/favicon.ico">
+    <style type="text/css">.SideBar, .SideBarPadding{display:none;}.MainContent{width:auto;}.SiteContentTable{width:100%;}</style>
+    <style id="ctl00_ctl00_Header_ProjectStyles" type="text/css">.SiteHeader,.SiteHeaderLeft{height:45px !important;overflow:hidden;}.SiteContent{padding:0 0 1em 0;margin-top:0;min-height:225px;border-right:1px solid lightgrey;border-left:1px solid lightgrey;border-bottom:1px solid lightgrey;}.IE6 .ProjectTitleControl{position:relative;}.IE table.MinWidthContent{table-layout:auto !important;}</style>
+    
+    
+    
+    
+    
+    <style type="text/css">.ProjectContent{padding:0;}</style>
+    <style type="text/css">
+        .WikiHolder
+        {
+            margin: 0 1em 0 0;
+        }
+        #WikiContent
+        {
+            margin-top: 15px;
+        }
+        #WikiBreadCrumbs
+        {
+            margin: 0.25em 0 1em 0;
+        }
+        .SecondarySearchButton 
+        {
+            margin:0 0 0 -0.6em;
+        }
+        .FF .SecondarySearchButton 
+        {
+            margin:-0.1em 0 0 -0.5em;
+            height: 22px;
+        }
+        .IE .SecondarySearchButton
+        {
+            width: 22px;
+            height: 22px;
+        }
+    </style>
+    
+    
+    <meta id="ctl00_ctl00_Header_WTProjectName" name="WT.pi" content="facebookgraphtoolkit">
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://facebooksdk.codeplex.com/rsd">
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" title="WLWManifest" href="http://facebooksdk.codeplex.com/wlwmanifest.xml">
+<meta id="ctl00_ctl00_PageDescription" name="Description" content="The Facebook C# SDK helps .Net developers build web, desktop, Silverlight, and Windows Phone applications that integrate with Facebook."><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK" href="http://facebooksdk.codeplex.com/project/feeds/rss"><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK-Issue Tracker" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fworkitem%2ffacebooksdk"><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK-Releases" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2frelease%2ffacebooksdk"><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK-Source Code" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fsourcecontrol%2ffacebooksdk"><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK-Wiki" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fwiki%2ffacebooksdk"><link rel="alternate" type="application/rss+xml" title="Facebook C# SDK-Reviews" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2freview%2ffacebooksdk"><title>
+	Facebook C# SDK
+</title></head>
+
+<body>
+    <form name="aspnetForm" method="POST" action="./Facebook C# SDK_files/Facebook C# SDK.htm" id="aspnetForm" autocomplete="off" enctype="multipart/form-data">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTExNDE1NDgzNTgPZBYCZg9kFgJmD2QWBGYPZBYIZg8WAh4HY29udGVudAUHSUU9ZWRnZWQCAg8WAh4EaHJlZgU6aHR0cDovL2kxLmNvZGVwbGV4LmNvbS9jc3MvdjE5MzMxL2kyMDM2NzQzL1N0eWxlU2hlZXQuYXNoeGQCBA9kFgRmDxYCHglpbm5lcmh0bWwFygIuU2l0ZUhlYWRlciwuU2l0ZUhlYWRlckxlZnR7aGVpZ2h0OjQ1cHggIWltcG9ydGFudDtvdmVyZmxvdzpoaWRkZW47fS5TaXRlQ29udGVudHtwYWRkaW5nOjAgMCAxZW0gMDttYXJnaW4tdG9wOjA7bWluLWhlaWdodDoyMjVweDtib3JkZXItcmlnaHQ6MXB4IHNvbGlkIGxpZ2h0Z3JleTtib3JkZXItbGVmdDoxcHggc29saWQgbGlnaHRncmV5O2JvcmRlci1ib3R0b206MXB4IHNvbGlkIGxpZ2h0Z3JleTt9LklFNiAuUHJvamVjdFRpdGxlQ29udHJvbHtwb3NpdGlvbjpyZWxhdGl2ZTt9LklFIHRhYmxlLk1pbldpZHRoQ29udGVudHt0YWJsZS1sYXlvdXQ6YXV0byAhaW1wb3J0YW50O31kAgMPFgQfAAUUZmFjZWJvb2tncmFwaHRvb2xraXQeB1Zpc2libGVnZAIFDxYEHwAFhwFUaGUgRmFjZWJvb2sgQyMgU0RLIGhlbHBzIC5OZXQgZGV2ZWxvcGVycyBidWlsZCB3ZWIsIGRlc2t0b3AsIFNpbHZlcmxpZ2h0LCBhbmQgV2luZG93cyBQaG9uZSBhcHBsaWNhdGlvbnMgdGhhdCBpbnRlZ3JhdGUgd2l0aCBGYWNlYm9vay4fA2dkAgEPZBYGZg8WAh4EVGV4dAVlPHNjcmlwdCBzcmM9Imh0dHBzOi8vc2l0ZXJlY3J1aXQuY29tc2NvcmUuY29tL3NyL2NvZGVwbGV4L2Jyb2tlci5qcyIgdHlwZT0idGV4dC9qYXZhc2NyaXB0Ij48L3NjcmlwdD5kAgEPDxYCHghJbWFnZVVybAUuaHR0cDovL2kzLmNvZGVwbGV4LmNvbS9JbWFnZXMvdjE5MzMxL2JsYW5rLnBuZxYCHgZvbmxvYWQFGXNlbGYubG9nb0ltYWdlTG9hZGVkPXRydWVkAgUPZBYIAgEPZBYGAgMPZBYMZg9kFgICAQ8PFgIeC05hdmlnYXRlVXJsBSBodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL2QWAmYPDxYCHg1BbHRlcm5hdGVUZXh0BRNGYWNlYm9vayBDJiMzNTsgU0RLZGQCAg8WAh8DZxYCAgEPDxYCHwcFIGh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vZBYCAgEPDxYCHwQFE0ZhY2Vib29rIEMmIzM1OyBTREtkZAIED2QWBAIBDw8WAh8HBSBodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL2QWAmYPDxYCHwgFE0ZhY2Vib29rIEMmIzM1OyBTREtkZAIDDw8WAh8HBSBodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL2QWAgIBDw8WAh8EBRNGYWNlYm9vayBDJiMzNTsgU0RLZGQCBg9kFgQCAQ8PFgIfBwUgaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS9kFgJmDw8WAh8IBRNGYWNlYm9vayBDJiMzNTsgU0RLZGQCAw8PFgIfBwUgaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS9kFgICAQ8PFgIfBAUTRmFjZWJvb2sgQyYjMzU7IFNES2RkAggPDxYCHwcFIGh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vZBYCZg8PFgIfCAUTRmFjZWJvb2sgQyYjMzU7IFNES2RkAgwPZBYCAgEPDxYCHwcFIGh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vZBYCAgEPDxYCHwQFE0ZhY2Vib29rIEMmIzM1OyBTREtkZAIFD2QWAmYPFgIfA2gWAgIBDw8WAh8HBSxodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL3Byb2plY3QvZWRpdGRkAgcPZBYCAgEPZBYCAgMPZBYCAgEPZBYCAgEPZBYCAgEPZBYOAgEPZBYCAgEPDxYCHwcFMWh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3NkZAIDDw8WAh8DaGQWAgIBDw8WAh8HBWVodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL3Byb2plY3QvZmVlZHMvcnNzP1Byb2plY3RSU1NGZWVkPWNvZGVwbGV4JTNhJTJmJTJmZm9ydW0lMmZmYWNlYm9va3Nka2RkAgUPZBYCAgEPDxYCHwcFaGh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZ3b3JraXRlbSUyZmZhY2Vib29rc2RrZGQCBw9kFgICAQ8PFgIfBwVnaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS9wcm9qZWN0L2ZlZWRzL3Jzcz9Qcm9qZWN0UlNTRmVlZD1jb2RlcGxleCUzYSUyZiUyZnJlbGVhc2UlMmZmYWNlYm9va3Nka2RkAgkPZBYCAgEPDxYCHwcFZmh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZyZXZpZXclMmZmYWNlYm9va3Nka2RkAgsPZBYCAgEPDxYCHwcFbWh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZzb3VyY2Vjb250cm9sJTJmZmFjZWJvb2tzZGtkZAIND2QWAgIBDw8WAh8HBWRodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL3Byb2plY3QvZmVlZHMvcnNzP1Byb2plY3RSU1NGZWVkPWNvZGVwbGV4JTNhJTJmJTJmd2lraSUyZmZhY2Vib29rc2RrZGQCAw9kFgICAQ9kFgRmDw8WAh8DaGQWAgIDD2QWAmYPZBYCAgEPZBYEAgUPDxYCHwNoZGQCBw8PFgIfA2hkZAIBD2QWAgIDD2QWAgIBD2QWAgIBD2QWAgIBD2QWAgIBDxYCHwEFRWh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vcHJvamVjdC9lZGl0P0ZvY3VzRWxlbWVudD1EZXNjcmlwdGlvbmQCBQ9kFhACAQ9kFgJmDw8WAh8HBSBodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tLxYCHgVjbGFzcwULaG9tZV9hY3RpdmVkAgMPZBYCZg8PFgIfBwUoaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS9yZWxlYXNlcxYCHwkFDWJveF9kb3dubG9hZHNkAgUPZBYCZg8PFgIfBwUtaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS9kb2N1bWVudGF0aW9uFgIfCQURYm94X2RvY3VtZW50YXRpb25kAgcPFgIfA2gWAmYPDxYCHwcFK2h0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vZGlzY3Vzc2lvbnMWAh8JBQ9ib3hfZGlzY3Vzc2lvbnNkAgkPZBYCZg8PFgIfBwUzaHR0cDovL2ZhY2Vib29rc2RrLmNvZGVwbGV4LmNvbS93b3JraXRlbS9saXN0L2Jhc2ljFgIfCQUJYm94X2lzc3VlZAILD2QWAmYPDxYCHwcFPWh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vU291cmNlQ29udHJvbC9saXN0L2NoYW5nZXNldHMWAh8JBQpib3hfc291cmNlZAIND2QWAmYPDxYCHwcFKWh0dHA6Ly9mYWNlYm9va3Nkay5jb2RlcGxleC5jb20vdGVhbS92aWV3FgIfCQUKYm94X3Blb3BsZWQCDw9kFgJmDw8WAh8HBSdodHRwOi8vZmFjZWJvb2tzZGsuY29kZXBsZXguY29tL2xpY2Vuc2UWAh8JBQtib3hfbGljZW5zZWQCCQ8PFgIfA2hkZGQV6PLj/XRB/SxVX+UiDKEUH7tzfA==">
+</div>
+
+    <!--
+    Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code,
+    not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx.
+    -->
+    <script src="./Facebook C# SDK_files/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="./Facebook C# SDK_files/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="./Facebook C# SDK_files/ScriptLoader.ashx" type="text/javascript"></script>
+        
+
+<div style="display: none;">
+    <div id="Analytics" style="width: 70%">
+        <script src="./Facebook C# SDK_files/broker.js" type="text/javascript"></script>
+        <img id="ctl00_ctl00_BlankImage" onload="self.logoImageLoaded=true" src="./Facebook C# SDK_files/blank.png" style="height:0px;width:0px;border-width:0px;">
+        <script language="javascript" type="text/javascript">
+            var date = new Date();
+            var timezoneOffset = date.getTimezoneOffset() / 60 * -1;
+            var timezoneOffsetCookie = getCookie("TimezoneOffset");
+            var firstTimeSetTimezoneCookie = false;
+
+            if (timezoneOffsetCookie == null || timezoneOffsetCookie != timezoneOffset) {
+                firstTimeSetTimezoneCookie = true;
+                document.cookie = "TimezoneOffset=" + timezoneOffset + '; domain=.codeplex.com;expires=Thu, 5 Sep 2013 00:39:10 UTC';
+            }
+        </script>
+        
+            <noscript>&lt;a href="http://www.omniture.com" title="Web Analytics"&gt;
+                &lt;img src="http://msstonojstemp.112.2O7.net/b/ss/msstonojstemp/1/H.20.2--NS/0" height="1" width="1" border="0" alt="" /&gt;
+            &lt;/a&gt;</noscript>
+               
+    </div>
+</div>
+
+<div id="header">
+    <div id="header_wrap" class="row">
+	    <p id="logo"><a href="http://www.codeplex.com/">Code<span class="semi">Plex</span></a><span id="tagline">Project Hosting for Open Source Software</span></p>
+        
+        
+        <ul id="nav">
+            
+    	    <li><a href="http://facebooksdk.codeplex.com/site/register/new" id="registerLink" class="ZoomFix">Register</a></li>
+            <li><a id="signInLink" class="SignInLink" href="https://www.codeplex.com/site/login?RedirectUrl=http%3a%2f%2ffacebooksdk.codeplex.com%2fWikipage%3fProjectName%3dfacebooksdk">Sign In</a></li>
+            <li class="last"><a class="rss_site_icon" href="http://www.codeplex.com/site/feeds/rss" type="application/rss+xml" rel="Alternate" title="CodePlex Site Activity"></a></li>
+        </ul>
+    
+        
+
+<input id="searchsite" name="searchsite" maxlength="500" type="text" value="" autocomplete="off" title="Search all projects" style="color: rgb(170, 170, 170); font-style: italic; "><span id="search_mag"><a id="submitSearch" name="submitSearch" class="magnify" title="Search all projects" href="http://facebooksdk.codeplex.com/#"></a></span>
+<script>
+	$(document).ready(function() {
+    $loadScript('http://i4.services.social.microsoft.com/search/Widgets/SearchBox.jss?appid=1000&scopeid=1&boxId=searchsite&btnId=submitSearch&watermark=Search%20all%20projects&overrideWatermark=true&searchLocation=%2fsite%2fsearch&allowEmptySearch=true&focusOnInit=False&minimumTermLength=3');
+    if (typeof epx_loaded === 'undefined' || !epx_loaded) {
+        $('#submitSearch').bind('click', doProjectSearch);
+        $('#searchsite').bind('keypress', function(e) { if ($keyCode(e) === 13) { doProjectSearch(); return false; } });
+    }
+})
+function doProjectSearch() {
+    
+    var url = '/site/search';
+
+    //If search term is not same as watermark
+    if($('#searchsite').val() != 'Search all projects')    
+    {        
+        url = url + '?query=' + encodeURIComponent($('#searchsite').val());
+    }
+
+    
+    var callback = '';
+    if (callback.length > 0 && eval('typeof ' + callback) != 'undefined')
+        url += eval(callback + '()');
+    window.location.href = url;
+    return false;
+}
+</script>
+
+    <div id="SearchFlyoutContainer" style="display: none; text-align: left; border: 1px solid buttonshadow; position: absolute; z-index: 1000; padding: 2px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 255); font-family: arial; "><div id="SuggestionContainer"><ul style="list-style: none; padding: 4px 2px 0px 1px; cursor: pointer; font-size: 8pt; margin: 1px; "></ul></div><div id="FooterContainer" style="width: 100%; margin: 0px; text-align: right; font-size: 8pt; "><a href="http://facebooksdk.codeplex.com/#">Close</a></div></div></div>
+</div>
+
+<div id="wrap">
+
+    
+	<div id="sub_heading" class="row">
+        <div id="ctl00_ctl00_MasterContent_ProjectHeader">
+            <div id="project_title_row" class="row">
+                <div id="project_logo">
+                    
+                    
+
+
+
+    <h1 class="text_only"><a id="ctl00_ctl00_MasterContent_ProjectTitleControl1_ProjectTextLink1" href="./Facebook C# SDK_files/Facebook C# SDK.htm"><div><span id="ctl00_ctl00_MasterContent_ProjectTitleControl1_ProjectTitle1">Facebook C# SDK</span></div></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <div id="project_title_links">
+                    
+
+                    <div id="RssContainer">
+                        
+   
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#rssHoverTitle a').click(function() {
+            allowUnsavedDataAlert();
+            $('#rssHoverDiv').hide();
+            return false;
+        });
+
+        $('#rssHoverLink a').click(function () {
+            var pos = $('#rssHoverLink .rss_link').position();
+            $("#rssHoverDiv").css({
+                top: (pos.top - 11) + "px",
+                left: (pos.left - 55) + "px"
+            }).show();
+            $('#rssHoverDiv').show();
+            return false;
+        });
+    })
+</script>
+    
+<div id="rssHoverDiv" class="HoverPanel LeftHoverWidth AlignLeft">
+        <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel" class="ContentPanelBox SideBarControl HoverContentPanel" style="">
+	<div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_headerPanel" class="HeaderPanel Header">
+		
+    
+                <div id="rssHoverTitle">
+                    <a class="rss_icon" href="http://facebooksdk.codeplex.com/#">RSS</a>
+                    <a class="rss_link" href="http://facebooksdk.codeplex.com/#">Subscribe to Project</a>
+                </div>
+                <div class="clear"></div>
+           
+
+	</div><div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_contentPanel" class="StandardPadding">
+		
+    
+            <ul id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_FeedsPanel" class="RssFeedsPanel">
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ProjectPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ProjectRssLink" title="All Project Updates" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss">All Project Updates</a>
+                    </li>
+                
+		</div>
+                
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_IssueTrackerPanel">
+			
+                    <li>    
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_IssueTrackerRssLink" title="New and updated work items" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fworkitem%2ffacebooksdk">Issue Tracker</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReleasesPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReleasesRssLink" title="New and updated releases" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2frelease%2ffacebooksdk">Releases</a>
+                    </li>
+                
+		</div>  
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReviewsPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReviewsRssLink" title="New and updated reviews" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2freview%2ffacebooksdk">Reviews</a>
+                    </li>
+                
+		</div>          
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_SourceControlPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_SourceControlRssLink" title="New check-ins" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fsourcecontrol%2ffacebooksdk">Source Code</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_WikiPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_WikiRssLink" title="New and updated wiki pages" class="ArrowSmall NoUnderline" href="http://facebooksdk.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fwiki%2ffacebooksdk">Wiki &amp; Documentation</a>
+                    </li>
+                
+		</div>
+            </ul>
+           
+
+	</div>
+</div>  
+</div>
+
+<div id="rssHoverLink">
+    <a class="rss_icon" href="http://facebooksdk.codeplex.com/#">RSS</a>
+    <a class="rss_link" href="http://facebooksdk.codeplex.com/#">Subscribe to Project</a>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ctl00_ctl00_MasterContent_ProjectDetailsDiv">
+            
+
+<script type="text/javascript">
+    function VerifyProjectDeletion()
+    {
+        var result = confirm("Are you sure you want to delete this project?  You will not be able to recover it later");
+        if (result)
+            ShowUpdatingPanel();
+        else
+            allowUnsavedDataAlert();
+        return result;
+    }
+    function ShowPublishPanel()
+    {
+        ShowUpdatingPanel();
+    }
+    function ShowUpdatingPanel()
+    {
+        var publishButton=$('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_PublishButton')[0];
+        var deleteButton=$('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_DeleteButton')[0];
+
+        setTimeout(function() { CodePlex.UpdateProgress.displayPanelAndDisableControls('Working...', publishButton, deleteButton) }, 1);
+    }
+</script>
+<div class="clear"></div>
+
+
+<script type="text/javascript">
+    // replaces the smartdatecontrol's "Today" with "today" or "on {Date}" for this user control
+    function formatDate() {
+        var dateSpan = $('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_DeletionDateLiteral');
+        if (dateSpan.text().toLowerCase() == "today")
+            dateSpan.text("today");
+        else
+            dateSpan.text("on " + dateSpan.text());
+    }
+    formatDate();
+</script>
+
+        </div>
+		<div class="clear"></div>
+        
+        
+
+	<ul id="page_box_links">
+
+		<li id="ctl00_ctl00_MasterContent_Tabs_homeTabCell" style="width: 83px; "><a id="ctl00_ctl00_MasterContent_Tabs_homeTab" class="home_active" href="./Facebook C# SDK_files/Facebook C# SDK.htm">home</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_releasesTabCell" style="width: 132px; "><a id="ctl00_ctl00_MasterContent_Tabs_releasesTab" class="box_downloads" href="http://facebooksdk.codeplex.com/releases">downloads</a><div></div></li>
+        <li id="ctl00_ctl00_MasterContent_Tabs_documentationTabCell" style="width: 163px; "><a id="ctl00_ctl00_MasterContent_Tabs_documentationTab" class="box_documentation" href="http://facebooksdk.codeplex.com/documentation">documentation</a><div></div></li>
+		
+		<li id="ctl00_ctl00_MasterContent_Tabs_workItemsTabCell" style="width: 144px; "><a id="ctl00_ctl00_MasterContent_Tabs_workItemsTab" class="box_issue" href="http://facebooksdk.codeplex.com/workitem/list/basic">issue tracker</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_sourceTabCell" style="width: 137px; "><a id="ctl00_ctl00_MasterContent_Tabs_sourceTab" class="box_source" href="http://facebooksdk.codeplex.com/SourceControl/list/changesets">source code</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_peopleTabCell" style="width: 91px; "><a id="ctl00_ctl00_MasterContent_Tabs_peopleTab" class="box_people" href="http://facebooksdk.codeplex.com/team/view">people</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_licenseTabCell" style="width: 116px; margin-right: 15px; "><a id="ctl00_ctl00_MasterContent_Tabs_licenseTab" class="box_license" href="http://facebooksdk.codeplex.com/license">license</a><div></div></li>
+        <span class="stretch"></span>
+	</ul>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            return resizeProjectTabs();
+        });
+    </script>
+
+
+
+		<div class="clear"></div>
+
+        
+    <div id="DeleteWikiPagePanel" class="modal" style="display: none;">
+        <div class="row">
+            <h2>Are you Sure? <a href="javascript:return false;" class="close">X</a></h2>
+        </div>
+        <div class="modal_info">
+            By clicking Delete, all history, comments and attachments for this page will be deleted and cannot be restored.
+            <div class="modal_buttons">
+                <input type="button" id="CancelButton" class="cancel" value="Cancel">
+                <input type="button" id="DeleteButton" class="ok" value="Delete">
+            </div>
+            <div class="ClearBoth"></div>
+        </div>
+    </div>
+    
+		<ul class="page_box_sublinks">
+            
+                <li><a id="pageInfoHyperLink" href="http://facebooksdk.codeplex.com/wiki/PageInfo?title=Home">Page Info</a></li>
+            
+            <li class="last"><a id="changesHyperlink" href="http://facebooksdk.codeplex.com/wikipage/history">Change History (all pages)</a></li>
+		</ul>
+
+        
+<script type="text/javascript">
+    function toggleFavoriteProject() {
+        
+            location.href = 'https://www.codeplex.com/site/login?RedirectUrl=http%3a%2f%2ffacebooksdk.codeplex.com%2f'
+        
+    }
+</script>
+
+<div id="favoriteProjectContainer">
+
+<p class="subtab_right">
+
+<span class="RatingStar EmptyRatingStar" onclick="toggleFavoriteProject();return false;" style="cursor:pointer;padding-right: 25px;"></span>
+
+
+    <a href="http://facebooksdk.codeplex.com/team/view">884 people</a> following this project
+
+
+<a id="followLink" href="http://facebooksdk.codeplex.com/#" onclick="toggleFavoriteProject();return false;">(follow)</a>
+</p></div>
+
+
+    </div>
+
+    
+
+    <div id="ctl00_ctl00_MasterContent_ProjectContentPanel">
+	
+        
+<div id="left_column">
+    
+
+    <div class="WikiHolder">
+
+        
+            <div id="WikiContent" class="WikiContent">
+                <div class="wikidoc">
+<div style="width:700px">
+<p><strong><span style="font-size:24pt; color:red">THIS PROJECT HAS MOVED</span></strong></p>
+<p><strong><span style="font-size:16pt"><strong><span>Project Home:&nbsp;<a href="http://csharpsdk.org/">http://csharpsdk.org</a></span></strong></span></strong></p>
+<p><strong><span style="font-size:16pt"><strong><span><a href="http://docs.csharpsdk.org/"></a></span></strong>Source code on Github:&nbsp;</span></strong><strong><span style="font-size:16pt"><a href="https://github.com/facebook-csharp-sdk">github.com/facebook-csharp-sdk</a></span></strong></p>
+<p><span style="font-size:21px"><strong><br>
+</strong></span></p>
+</div>
+</div><div class="ClearBoth"></div>
+            </div>
+        
+                <p>Last edited <span class="smartDate" title="2/21/2012 11:44:20 PM" localtimeticks="1329896660">Feb 21 at 11:44 PM</span> by <a id="wikiEditByLink" href="http://www.codeplex.com/site/users/view/ntotten">ntotten</a>, version 100</p>
+            
+    </div>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#deleteWikiHyperLink').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', true, '30em');
+            });
+            $('#DeleteButton').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', false);
+                CodePlex.UpdateProgress.show();
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'http://facebooksdk.codeplex.com/',
+                    data: {title: $('#WikiTitle').val()},
+                    success: function (data) {
+                        CodePlex.UpdateProgress.hide();
+                        window.location = data;
+                    },
+                    error: function (data) {
+                        CodePlex.UpdateProgress.hide();
+                    }
+                });
+            });
+            $('#CancelButton').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', false);
+            });
+            
+            
+        });
+    </script>
+</div>
+
+        
+	<div id="right_sidebar">
+        
+
+<input name="" type="text" maxlength="500" id="wiki_search" class="EmptyTextBox"><a id="SearchButton" class="wiki_magnify" href="http://facebooksdk.codeplex.com/#"></a>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#wiki_search').keypress(function (e) {
+            if (e.keyCode == 13) {
+                wikiSearch();
+                return false;
+            }
+        });
+
+        $('#SearchButton').click(function () {
+            wikiSearch();
+            return false;
+        });
+
+        $('#wiki_search').promptBox('Search Wiki & Documentation');
+
+    });
+    function setWikiCommentTextBoxFocus() {
+        $('#Comment').focus();
+        return false;
+    }
+
+    function wikiSearch() {
+        var $textbox = $('#wiki_search');
+        if($textbox.attr('dirty') != 'true')
+            return;
+        var searchText = encodeURIComponent(jQuery.trim($textbox.val()));
+        if(searchText != null & searchText.length > 0)
+            window.location.href = 'http://facebooksdk.codeplex.com/wiki/search?tab=Home&SearchText=' + searchText;
+    }
+
+</script>
+    <p class="NoItemsMessage">There is no recommended release for this project.</p>
+
+
+<div id="LoungeAdsDiv">
+	<div id="Ad1" class="lqm_ad" style="width: 300px; height: 250px; margin: 0px auto;" lqm_channel="1" lqm_site="C-facebooksdk" lqm_format="6" lqm_charity="1" lqm_zone="87" lqm_tags="Facebook%2cC%23%2c.NET%2cFacebook%20API%2csdk%2cControls%2cfacebook%20.net%20%2cFacebook%20C%23%20SDK%2cFacebook%20Canvas%20App%2cfacebook%20connect"><iframe id="lqmad1" width="300" height="250" marginwidth="0" marginheight="0" frameborder="0" scrolling="no"></iframe></div>
+    <p id="adzerk_by" class="LoungeAdsBottomLinks">
+        <a href="http://lakequincy.com/" target="_blank">Ads by Lake Quincy Media</a>
+        
+            | Ad revenue is <a href="http://codeplex.codeplex.com/wikipage?title=Start%20a%20Project&referringTitle=home&ProjectName=codeplex#Donate" target="_blank">donated</a>.
+        
+    </p>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.getScript('http://s1.lqcdn.com/m.min.js', function () {
+            $.LqmAds(); 
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#PageActivity .Link').click(function () {
+                var val = $(this).attr('d:value');
+                $.post('http://facebooksdk.codeplex.com/stats/getActivity',
+                    { period: val },
+                    function (data) {
+                        $('#PageActivity span').hide();
+                        $('#PageActivity .Link').show();
+                        $('#Page' + val + 'Label').show();
+                        $('#Page' + val + 'Link').hide();
+                        $('#pageViews').text(data.PageViews);
+                        $('#visits').text(data.Visits);
+                        $('#downloads').text(data.Downloads);
+                    }, 'json');
+                return false;
+            });
+        });
+</script>
+<div id="activity">
+	<h2>activity</h2>
+
+	<div class="clear"></div>
+
+    <table>
+	    <tbody><tr>
+            <th class="t_heading">page views</th>
+            <th class="t_heading">visits</th>
+            <th class="t_heading">downloads</th>
+	    </tr>
+		<tr>
+			<td><span id="pageViews">7076</span></td>
+			<td><span id="visits">3574</span></td>
+			<td><span id="downloads">563</span></td>
+		</tr>
+    </tbody></table>
+
+	<ul id="PageActivity"> 
+		<li>Days: </li>
+		<li>
+		    <span id="Page7Label">7</span>
+            <a id="Page7Link" href="http://facebooksdk.codeplex.com/#" class="Link" style="display:none;" d:value="7">7</a>
+		</li>
+		<li>
+		    <span id="Page30Label" style="display:none;">30</span>
+            <a id="Page30Link" href="http://facebooksdk.codeplex.com/#" class="Link" d:value="30">30</a>
+		</li>
+		<li>
+		    <span id="Page-1Label" style="display:none;">All</span>
+            <a id="Page-1Link" href="http://facebooksdk.codeplex.com/#" class="Link" d:value="-1">All</a>
+		</li>
+        <li id="activity_details"><a href="http://facebooksdk.codeplex.com/stats">Details</a></li>
+	</ul>
+
+</div>
+
+    </div>
+
+    
+</div>
+
+
+
+	<div class="clear"></div><!--keep footer down-->
+
+    <div id="footer">
+        <div class="row">
+            <hr>
+            <ul>
+                <li>© 2006-2012 Microsoft</li>
+                <li><a href="http://www.codeplex.com/site/help">Get Help</a></li>
+                <li><a href="http://facebooksdk.codeplex.com/site/legal/privacy">Privacy Statement</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/terms">Terms of Use</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/conduct">Code of Conduct</a></li>
+                <li><a href="http://www.lakequincy.com/" target="_blank">Advertise With Us</a></li>
+                <li>Version 8.27.2012.19331</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</form>
+<div style="display: none; z-index: 1000; outline: 0px; position: absolute; " class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable ui-resizable" tabindex="-1" role="dialog" aria-labelledby="ui-dialog-title-UpdateProgressPanel"><div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span class="ui-dialog-title" id="ui-dialog-title-UpdateProgressPanel">&nbsp;</span><a href="http://facebooksdk.codeplex.com/#" class="ui-dialog-titlebar-close ui-corner-all" role="button"><span class="ui-icon ui-icon-closethick">close</span></a></div><div id="UpdateProgressPanel" class="loading_animation ui-dialog-content ui-widget-content" style="">
+    <div class="row">
+        <h2 class="anim_h2">
+            <span id="UpdateProgressText">Updating...</span>
+            <span id="animatedLoadingIconContainer">
+                <img id="animatedLoadingIcon" src="./Facebook C# SDK_files/loading_animation.gif" class="anim_img">
+            </span>
+        </h2>
+    </div>
+</div><div class="ui-resizable-handle ui-resizable-n" style=""></div><div class="ui-resizable-handle ui-resizable-e" style=""></div><div class="ui-resizable-handle ui-resizable-s" style=""></div><div class="ui-resizable-handle ui-resizable-w" style=""></div><div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se ui-icon-grip-diagonal-se" style="z-index: 1001; "></div><div class="ui-resizable-handle ui-resizable-sw" style="z-index: 1002; "></div><div class="ui-resizable-handle ui-resizable-ne" style="z-index: 1003; "></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 1004; "></div></div><script src="./Facebook C# SDK_files/broker-config.js"></script></body></html>

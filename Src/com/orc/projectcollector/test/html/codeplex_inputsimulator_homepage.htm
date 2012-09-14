@@ -1,0 +1,697 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="Chrome ">
+
+<head id="ctl00_ctl00_HeadTag"><meta id="ctl00_ctl00_CompatabilityMode" http-equiv="X-UA-Compatible" content="IE=edge" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link id="ctl00_ctl00_MasterCss" type="text/css" rel="stylesheet" href="http://i1.codeplex.com/css/v19356/i2036743/StyleSheet.ashx" /><link rel="SHORTCUT ICON" href="favicon.ico" />
+    <style type="text/css">.SideBar, .SideBarPadding{display:none;}.MainContent{width:auto;}.SiteContentTable{width:100%;}</style>
+    <style id="ctl00_ctl00_Header_ProjectStyles" type="text/css">.SiteHeader,.SiteHeaderLeft{height:45px !important;overflow:hidden;}.SiteContent{padding:0 0 1em 0;margin-top:0;min-height:225px;border-right:1px solid lightgrey;border-left:1px solid lightgrey;border-bottom:1px solid lightgrey;}.IE6 .ProjectTitleControl{position:relative;}.IE table.MinWidthContent{table-layout:auto !important;}</style>
+    
+    
+    
+    
+    
+    <style type="text/css">.ProjectContent{padding:0;}</style>
+    <style type="text/css">
+        .WikiHolder
+        {
+            margin: 0 1em 0 0;
+        }
+        #WikiContent
+        {
+            margin-top: 15px;
+        }
+        #WikiBreadCrumbs
+        {
+            margin: 0.25em 0 1em 0;
+        }
+        .SecondarySearchButton 
+        {
+            margin:0 0 0 -0.6em;
+        }
+        .FF .SecondarySearchButton 
+        {
+            margin:-0.1em 0 0 -0.5em;
+            height: 22px;
+        }
+        .IE .SecondarySearchButton
+        {
+            width: 22px;
+            height: 22px;
+        }
+    </style>
+    
+    
+    <meta id="ctl00_ctl00_Header_WTProjectName" name="WT.pi" content="inputsimulator"></meta>
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href='http://inputsimulator.codeplex.com/rsd' />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" title="WLWManifest" href='/wlwmanifest.xml' />
+<meta id="ctl00_ctl00_PageDescription" name="Description" content="The Windows Input Simulator provides a simple .NET (C#) interface to simulate Keyboard or Mouse input using the Win32 SendInput method. All of the Interop is done for you and there&amp;#39;s a simple programming model for sending multiple keystrokes." /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)" href="http://inputsimulator.codeplex.com/project/feeds/rss" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Discussions" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fforum%2finputsimulator" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Issue Tracker" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fworkitem%2finputsimulator" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Releases" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2frelease%2finputsimulator" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Source Code" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fsourcecontrol%2finputsimulator" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Wiki" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fwiki%2finputsimulator" /><link rel="alternate" type="application/rss+xml" title="Windows Input Simulator (C# SendInput Wrapper - Simulate Keyboard and Mouse)-Reviews" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2freview%2finputsimulator" /><title>
+	Windows Input Simulator &#40;C&#35; SendInput Wrapper - Simulate Keyboard and Mouse&#41;
+</title></head>
+
+<body>
+    <form name="aspnetForm" method="POST" action="/" id="aspnetForm" autocomplete="off" enctype="multipart/form-data">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTExNDE1NDgzNTgPZBYCZg9kFgJmD2QWBGYPZBYIZg8WAh4HY29udGVudAUHSUU9ZWRnZWQCAg8WAh4EaHJlZgU6aHR0cDovL2kxLmNvZGVwbGV4LmNvbS9jc3MvdjE5MzU2L2kyMDM2NzQzL1N0eWxlU2hlZXQuYXNoeGQCBA9kFgRmDxYCHglpbm5lcmh0bWwFygIuU2l0ZUhlYWRlciwuU2l0ZUhlYWRlckxlZnR7aGVpZ2h0OjQ1cHggIWltcG9ydGFudDtvdmVyZmxvdzpoaWRkZW47fS5TaXRlQ29udGVudHtwYWRkaW5nOjAgMCAxZW0gMDttYXJnaW4tdG9wOjA7bWluLWhlaWdodDoyMjVweDtib3JkZXItcmlnaHQ6MXB4IHNvbGlkIGxpZ2h0Z3JleTtib3JkZXItbGVmdDoxcHggc29saWQgbGlnaHRncmV5O2JvcmRlci1ib3R0b206MXB4IHNvbGlkIGxpZ2h0Z3JleTt9LklFNiAuUHJvamVjdFRpdGxlQ29udHJvbHtwb3NpdGlvbjpyZWxhdGl2ZTt9LklFIHRhYmxlLk1pbldpZHRoQ29udGVudHt0YWJsZS1sYXlvdXQ6YXV0byAhaW1wb3J0YW50O31kAgMPFgQfAAUOaW5wdXRzaW11bGF0b3IeB1Zpc2libGVnZAIFDxYEHwAF9gFUaGUgV2luZG93cyBJbnB1dCBTaW11bGF0b3IgcHJvdmlkZXMgYSBzaW1wbGUgLk5FVCAoQyMpIGludGVyZmFjZSB0byBzaW11bGF0ZSBLZXlib2FyZCBvciBNb3VzZSBpbnB1dCB1c2luZyB0aGUgV2luMzIgU2VuZElucHV0IG1ldGhvZC4gQWxsIG9mIHRoZSBJbnRlcm9wIGlzIGRvbmUgZm9yIHlvdSBhbmQgdGhlcmUmIzM5O3MgYSBzaW1wbGUgcHJvZ3JhbW1pbmcgbW9kZWwgZm9yIHNlbmRpbmcgbXVsdGlwbGUga2V5c3Ryb2tlcy4fA2dkAgEPZBYGZg8WAh4EVGV4dAVlPHNjcmlwdCBzcmM9Imh0dHBzOi8vc2l0ZXJlY3J1aXQuY29tc2NvcmUuY29tL3NyL2NvZGVwbGV4L2Jyb2tlci5qcyIgdHlwZT0idGV4dC9qYXZhc2NyaXB0Ij48L3NjcmlwdD5kAgEPDxYCHghJbWFnZVVybAUuaHR0cDovL2kzLmNvZGVwbGV4LmNvbS9JbWFnZXMvdjE5MzU2L2JsYW5rLnBuZxYCHgZvbmxvYWQFGXNlbGYubG9nb0ltYWdlTG9hZGVkPXRydWVkAgUPZBYIAgEPZBYGAgMPZBYMZg9kFgICAQ8PFgIeC05hdmlnYXRlVXJsBSNodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL2QWAmYPDxYCHg1BbHRlcm5hdGVUZXh0BVhXaW5kb3dzIElucHV0IFNpbXVsYXRvciAmIzQwO0MmIzM1OyBTZW5kSW5wdXQgV3JhcHBlciAtIFNpbXVsYXRlIEtleWJvYXJkIGFuZCBNb3VzZSYjNDE7ZGQCAg8WAh8DZxYCAgEPDxYCHwcFI2h0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vZBYCAgEPDxYCHwQFWFdpbmRvd3MgSW5wdXQgU2ltdWxhdG9yICYjNDA7QyYjMzU7IFNlbmRJbnB1dCBXcmFwcGVyIC0gU2ltdWxhdGUgS2V5Ym9hcmQgYW5kIE1vdXNlJiM0MTtkZAIED2QWBAIBDw8WAh8HBSNodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL2QWAmYPDxYCHwgFWFdpbmRvd3MgSW5wdXQgU2ltdWxhdG9yICYjNDA7QyYjMzU7IFNlbmRJbnB1dCBXcmFwcGVyIC0gU2ltdWxhdGUgS2V5Ym9hcmQgYW5kIE1vdXNlJiM0MTtkZAIDDw8WAh8HBSNodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL2QWAgIBDw8WAh8EBVhXaW5kb3dzIElucHV0IFNpbXVsYXRvciAmIzQwO0MmIzM1OyBTZW5kSW5wdXQgV3JhcHBlciAtIFNpbXVsYXRlIEtleWJvYXJkIGFuZCBNb3VzZSYjNDE7ZGQCBg9kFgQCAQ8PFgIfBwUjaHR0cDovL2lucHV0c2ltdWxhdG9yLmNvZGVwbGV4LmNvbS9kFgJmDw8WAh8IBVhXaW5kb3dzIElucHV0IFNpbXVsYXRvciAmIzQwO0MmIzM1OyBTZW5kSW5wdXQgV3JhcHBlciAtIFNpbXVsYXRlIEtleWJvYXJkIGFuZCBNb3VzZSYjNDE7ZGQCAw8PFgIfBwUjaHR0cDovL2lucHV0c2ltdWxhdG9yLmNvZGVwbGV4LmNvbS9kFgICAQ8PFgIfBAVYV2luZG93cyBJbnB1dCBTaW11bGF0b3IgJiM0MDtDJiMzNTsgU2VuZElucHV0IFdyYXBwZXIgLSBTaW11bGF0ZSBLZXlib2FyZCBhbmQgTW91c2UmIzQxO2RkAggPDxYCHwcFI2h0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vZBYCZg8PFgIfCAVYV2luZG93cyBJbnB1dCBTaW11bGF0b3IgJiM0MDtDJiMzNTsgU2VuZElucHV0IFdyYXBwZXIgLSBTaW11bGF0ZSBLZXlib2FyZCBhbmQgTW91c2UmIzQxO2RkAgwPZBYCAgEPDxYCHwcFI2h0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vZBYCAgEPDxYCHwQFWFdpbmRvd3MgSW5wdXQgU2ltdWxhdG9yICYjNDA7QyYjMzU7IFNlbmRJbnB1dCBXcmFwcGVyIC0gU2ltdWxhdGUgS2V5Ym9hcmQgYW5kIE1vdXNlJiM0MTtkZAIFD2QWAmYPFgIfA2gWAgIBDw8WAh8HBS9odHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL3Byb2plY3QvZWRpdGRkAgcPZBYCAgEPZBYCAgMPZBYCAgEPZBYCAgEPZBYCAgEPZBYOAgEPZBYCAgEPDxYCHwcFNGh0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3NkZAIDD2QWAgIBDw8WAh8HBWtodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL3Byb2plY3QvZmVlZHMvcnNzP1Byb2plY3RSU1NGZWVkPWNvZGVwbGV4JTNhJTJmJTJmZm9ydW0lMmZpbnB1dHNpbXVsYXRvcmRkAgUPZBYCAgEPDxYCHwcFbmh0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZ3b3JraXRlbSUyZmlucHV0c2ltdWxhdG9yZGQCBw9kFgICAQ8PFgIfBwVtaHR0cDovL2lucHV0c2ltdWxhdG9yLmNvZGVwbGV4LmNvbS9wcm9qZWN0L2ZlZWRzL3Jzcz9Qcm9qZWN0UlNTRmVlZD1jb2RlcGxleCUzYSUyZiUyZnJlbGVhc2UlMmZpbnB1dHNpbXVsYXRvcmRkAgkPZBYCAgEPDxYCHwcFbGh0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZyZXZpZXclMmZpbnB1dHNpbXVsYXRvcmRkAgsPZBYCAgEPDxYCHwcFc2h0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vcHJvamVjdC9mZWVkcy9yc3M/UHJvamVjdFJTU0ZlZWQ9Y29kZXBsZXglM2ElMmYlMmZzb3VyY2Vjb250cm9sJTJmaW5wdXRzaW11bGF0b3JkZAIND2QWAgIBDw8WAh8HBWpodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL3Byb2plY3QvZmVlZHMvcnNzP1Byb2plY3RSU1NGZWVkPWNvZGVwbGV4JTNhJTJmJTJmd2lraSUyZmlucHV0c2ltdWxhdG9yZGQCAw9kFgICAQ9kFgRmDw8WAh8DaGQWAgIDD2QWAmYPZBYCAgEPZBYEAgUPDxYCHwNoZGQCBw8PFgIfA2hkZAIBD2QWAgIDD2QWAgIBD2QWAgIBD2QWAgIBD2QWAgIBDxYCHwEFSGh0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vcHJvamVjdC9lZGl0P0ZvY3VzRWxlbWVudD1EZXNjcmlwdGlvbmQCBQ9kFhACAQ9kFgJmDw8WAh8HBSNodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tLxYCHgVjbGFzcwULaG9tZV9hY3RpdmVkAgMPZBYCZg8PFgIfBwU2aHR0cDovL2lucHV0c2ltdWxhdG9yLmNvZGVwbGV4LmNvbS9yZWxlYXNlcy92aWV3LzM3NTcwFgIfCQUNYm94X2Rvd25sb2Fkc2QCBQ9kFgJmDw8WAh8HBTBodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL2RvY3VtZW50YXRpb24WAh8JBRFib3hfZG9jdW1lbnRhdGlvbmQCBw9kFgJmDw8WAh8HBS5odHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL2Rpc2N1c3Npb25zFgIfCQUPYm94X2Rpc2N1c3Npb25zZAIJD2QWAmYPDxYCHwcFNmh0dHA6Ly9pbnB1dHNpbXVsYXRvci5jb2RlcGxleC5jb20vd29ya2l0ZW0vbGlzdC9iYXNpYxYCHwkFCWJveF9pc3N1ZWQCCw9kFgJmDw8WAh8HBUBodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL1NvdXJjZUNvbnRyb2wvbGlzdC9jaGFuZ2VzZXRzFgIfCQUKYm94X3NvdXJjZWQCDQ9kFgJmDw8WAh8HBSxodHRwOi8vaW5wdXRzaW11bGF0b3IuY29kZXBsZXguY29tL3RlYW0vdmlldxYCHwkFCmJveF9wZW9wbGVkAg8PZBYCZg8PFgIfBwUqaHR0cDovL2lucHV0c2ltdWxhdG9yLmNvZGVwbGV4LmNvbS9saWNlbnNlFgIfCQULYm94X2xpY2Vuc2VkAgkPDxYCHwNoZGRk3w6h5FAJkRtSf6F+y/cNMZvD3xM=" />
+</div>
+
+    <!--
+    Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code,
+    not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx.
+    -->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.6/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="http://i1.codeplex.com/scripts/v19356/i7/ScriptLoader.ashx" type="text/javascript"></script>
+        
+<div id="UpdateProgressPanel" class="loading_animation" style="display:none;">
+    <div class="row">
+        <h2 class="anim_h2">
+            <span id="UpdateProgressText">Updating...</span>
+            <span id="animatedLoadingIconContainer">
+                <img id="animatedLoadingIcon" src="http://i3.codeplex.com/Images/v19356/loading_animation.gif" class="anim_img"/>
+            </span>
+        </h2>
+    </div>
+</div>
+<div style="display: none;">
+    <div id="Analytics" style="width: 70%">
+        <script src="https://siterecruit.comscore.com/sr/codeplex/broker.js" type="text/javascript"></script>
+        <img id="ctl00_ctl00_BlankImage" onload="self.logoImageLoaded=true" src="http://i3.codeplex.com/Images/v19356/blank.png" style="height:0px;width:0px;border-width:0px;" />
+        <script language="javascript" type="text/javascript">
+            var date = new Date();
+            var timezoneOffset = date.getTimezoneOffset() / 60 * -1;
+            var timezoneOffsetCookie = getCookie("TimezoneOffset");
+            var firstTimeSetTimezoneCookie = false;
+
+            if (timezoneOffsetCookie == null || timezoneOffsetCookie != timezoneOffset) {
+                firstTimeSetTimezoneCookie = true;
+                document.cookie = "TimezoneOffset=" + timezoneOffset + '; domain=.codeplex.com;expires=Fri, 13 Sep 2013 02:14:29 UTC';
+            }
+        </script>
+        
+            <noscript><a href="http://www.omniture.com" title="Web Analytics">
+                <img src="http://msstonojstemp.112.2O7.net/b/ss/msstonojstemp/1/H.20.2--NS/0" height="1" width="1" border="0" alt="" />
+            </a></noscript>
+               
+    </div>
+</div>
+
+<div id="header">
+    <div id="header_wrap" class="row">
+	    <p id="logo"><a href="http://www.codeplex.com">Code<span class="semi">Plex</span></a><span id="tagline">Project Hosting for Open Source Software</span></p>
+        
+        
+        <ul id="nav">
+            
+    	    <li><a href="/site/register/new" id="registerLink" class="ZoomFix">Register</a></li>
+            <li ><a id=signInLink class='SignInLink' href='https://www.codeplex.com/site/login?RedirectUrl=http%3a%2f%2finputsimulator.codeplex.com%2fWikipage%3fProjectName%3dinputsimulator'>Sign In</a></li>
+            <li class="last"><a class="rss_site_icon" href="http://www.codeplex.com/site/feeds/rss" type="application/rss+xml" rel="Alternate" title="CodePlex Site Activity"></a></li>
+        </ul>
+    
+        
+
+<input id="searchsite" name="searchsite" maxlength="500" type="text" value="" /><span id="search_mag"><a id="submitSearch" name="submitSearch" class="magnify" title="Search" href="#"></a></span>
+<script>
+	$(document).ready(function() {
+    $loadScript('http://i4.services.social.microsoft.com/search/Widgets/SearchBox.jss?appid=1000&scopeid=1&boxId=searchsite&btnId=submitSearch&watermark=Search%20all%20projects&overrideWatermark=true&searchLocation=%2fsite%2fsearch&allowEmptySearch=true&focusOnInit=False&minimumTermLength=3');
+    if (typeof epx_loaded === 'undefined' || !epx_loaded) {
+        $('#submitSearch').bind('click', doProjectSearch);
+        $('#searchsite').bind('keypress', function(e) { if ($keyCode(e) === 13) { doProjectSearch(); return false; } });
+    }
+})
+function doProjectSearch() {
+    
+    var url = '/site/search';
+
+    //If search term is not same as watermark
+    if($('#searchsite').val() != 'Search all projects')    
+    {        
+        url = url + '?query=' + encodeURIComponent($('#searchsite').val());
+    }
+
+    
+    var callback = '';
+    if (callback.length > 0 && eval('typeof ' + callback) != 'undefined')
+        url += eval(callback + '()');
+    window.location.href = url;
+    return false;
+}
+</script>
+
+    </div>
+</div>
+
+<div id="wrap">
+
+    
+	<div id="sub_heading" class="row">
+        <div id="ctl00_ctl00_MasterContent_ProjectHeader">
+            <div id="project_title_row" class="row">
+                <div id="project_logo">
+                    
+                    
+
+
+
+    <h1 class="text_only"><a id="ctl00_ctl00_MasterContent_ProjectTitleControl1_ProjectTextLink1" href="http://inputsimulator.codeplex.com/"><div><span id="ctl00_ctl00_MasterContent_ProjectTitleControl1_ProjectTitle1">Windows Input Simulator &#40;C&#35; SendInput Wrapper - Simulate Keyboard and Mouse&#41;</span></div></a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+                <div id="project_title_links">
+                    
+
+                    <div id="RssContainer">
+                        
+   
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#rssHoverTitle a').click(function() {
+            allowUnsavedDataAlert();
+            $('#rssHoverDiv').hide();
+            return false;
+        });
+
+        $('#rssHoverLink a').click(function () {
+            var pos = $('#rssHoverLink .rss_link').position();
+            $("#rssHoverDiv").css({
+                top: (pos.top - 11) + "px",
+                left: (pos.left - 55) + "px"
+            }).show();
+            $('#rssHoverDiv').show();
+            return false;
+        });
+    })
+</script>
+    
+<div id="rssHoverDiv" class="HoverPanel LeftHoverWidth AlignLeft">
+        <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel" class="ContentPanelBox SideBarControl HoverContentPanel" style="">
+	<div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_headerPanel" class="HeaderPanel Header">
+		
+    
+                <div id="rssHoverTitle">
+                    <a class="rss_icon" href="#">RSS</a>
+                    <a class="rss_link" href="#">Subscribe to Project</a>
+                </div>
+                <div class="clear"></div>
+           
+
+	</div><div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_contentPanel" class="StandardPadding">
+		
+    
+            <ul id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_FeedsPanel" class="RssFeedsPanel">
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ProjectPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ProjectRssLink" title="All Project Updates" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss">All Project Updates</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_DiscussionsPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_DiscussionsRssLink" title="New threads and posts" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fforum%2finputsimulator">Discussions</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_IssueTrackerPanel">
+			
+                    <li>    
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_IssueTrackerRssLink" title="New and updated work items" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fworkitem%2finputsimulator">Issue Tracker</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReleasesPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReleasesRssLink" title="New and updated releases" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2frelease%2finputsimulator">Releases</a>
+                    </li>
+                
+		</div>  
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReviewsPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_ReviewsRssLink" title="New and updated reviews" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2freview%2finputsimulator">Reviews</a>
+                    </li>
+                
+		</div>          
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_SourceControlPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_SourceControlRssLink" title="New check-ins" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fsourcecontrol%2finputsimulator">Source Code</a>
+                    </li>
+                
+		</div>
+                <div id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_WikiPanel">
+			
+                    <li>
+                        <a id="ctl00_ctl00_MasterContent_rssFeeds_RssHoverContentPanel_WikiRssLink" title="New and updated wiki pages" class="ArrowSmall NoUnderline" href="http://inputsimulator.codeplex.com/project/feeds/rss?ProjectRSSFeed=codeplex%3a%2f%2fwiki%2finputsimulator">Wiki & Documentation</a>
+                    </li>
+                
+		</div>
+            </ul>
+           
+
+	</div>
+</div>  
+</div>
+
+<div id="rssHoverLink">
+    <a class="rss_icon" href="#">RSS</a>
+    <a class="rss_link" href="#">Subscribe to Project</a>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ctl00_ctl00_MasterContent_ProjectDetailsDiv">
+            
+
+<script type="text/javascript">
+    function VerifyProjectDeletion()
+    {
+        var result = confirm("Are you sure you want to delete this project?  You will not be able to recover it later");
+        if (result)
+            ShowUpdatingPanel();
+        else
+            allowUnsavedDataAlert();
+        return result;
+    }
+    function ShowPublishPanel()
+    {
+        ShowUpdatingPanel();
+    }
+    function ShowUpdatingPanel()
+    {
+        var publishButton=$('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_PublishButton')[0];
+        var deleteButton=$('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_DeleteButton')[0];
+
+        setTimeout(function() { CodePlex.UpdateProgress.displayPanelAndDisableControls('Working...', publishButton, deleteButton) }, 1);
+    }
+</script>
+<div class="clear"></div>
+
+
+<script type="text/javascript">
+    // replaces the smartdatecontrol's "Today" with "today" or "on {Date}" for this user control
+    function formatDate() {
+        var dateSpan = $('#ctl00_ctl00_MasterContent_ProjectCountdown_PublishProject_DeletionDateLiteral');
+        if (dateSpan.text().toLowerCase() == "today")
+            dateSpan.text("today");
+        else
+            dateSpan.text("on " + dateSpan.text());
+    }
+    formatDate();
+</script>
+
+        </div>
+		<div class="clear"></div>
+        
+        
+
+	<ul id="page_box_links">
+
+		<li id="ctl00_ctl00_MasterContent_Tabs_homeTabCell" style="width: 63px;"><a id="ctl00_ctl00_MasterContent_Tabs_homeTab" class="home_active" href="http://inputsimulator.codeplex.com/">home</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_releasesTabCell" style="width:112px;"><a id="ctl00_ctl00_MasterContent_Tabs_releasesTab" class="box_downloads" href="http://inputsimulator.codeplex.com/releases/view/37570">downloads</a><div></div></li>
+        <li id="ctl00_ctl00_MasterContent_Tabs_documentationTabCell" style="width:143px;"><a id="ctl00_ctl00_MasterContent_Tabs_documentationTab" class="box_documentation" href="http://inputsimulator.codeplex.com/documentation">documentation</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_discussionTabCell" style="width:112px;"><a id="ctl00_ctl00_MasterContent_Tabs_discussionTab" class="box_discussions" href="http://inputsimulator.codeplex.com/discussions">discussions</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_workItemsTabCell" style="width:124px;"><a id="ctl00_ctl00_MasterContent_Tabs_workItemsTab" class="box_issue" href="http://inputsimulator.codeplex.com/workitem/list/basic">issue tracker</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_sourceTabCell" style="width:117px;"><a id="ctl00_ctl00_MasterContent_Tabs_sourceTab" class="box_source" href="http://inputsimulator.codeplex.com/SourceControl/list/changesets">source code</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_peopleTabCell" style="width:71px;"><a id="ctl00_ctl00_MasterContent_Tabs_peopleTab" class="box_people" href="http://inputsimulator.codeplex.com/team/view">people</a><div></div></li>
+		<li id="ctl00_ctl00_MasterContent_Tabs_licenseTabCell" style="width:96px; margin-right:15px;"><a id="ctl00_ctl00_MasterContent_Tabs_licenseTab" class="box_license" href="http://inputsimulator.codeplex.com/license">license</a><div></div></li>
+        <span class="stretch"></span>
+	</ul>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            return resizeProjectTabs();
+        });
+    </script>
+
+
+
+		<div class="clear"></div>
+
+        
+    <div id="DeleteWikiPagePanel" class="modal" style="display: none;">
+        <div class="row">
+            <h2>Are you Sure? <a href="javascript:return false;" class="close">X</a></h2>
+        </div>
+        <div class="modal_info">
+            By clicking Delete, all history, comments and attachments for this page will be deleted and cannot be restored.
+            <div class="modal_buttons">
+                <input type="button" id="CancelButton" class="cancel" value="Cancel" />
+                <input type="button" id="DeleteButton" class="ok" value="Delete" />
+            </div>
+            <div class="ClearBoth"></div>
+        </div>
+    </div>
+    
+		<ul class="page_box_sublinks">
+            
+                <li><a id="pageInfoHyperLink" href="http://inputsimulator.codeplex.com/wiki/PageInfo?title=Home">Page Info</a></li>
+            
+            <li class="last"><a id="changesHyperlink" href="http://inputsimulator.codeplex.com/wikipage/history">Change History (all pages)</a></li>
+		</ul>
+
+        
+<script type="text/javascript">
+    function toggleFavoriteProject() {
+        
+            location.href = 'https://www.codeplex.com/site/login?RedirectUrl=http%3a%2f%2finputsimulator.codeplex.com%2f'
+        
+    }
+</script>
+
+<div id="favoriteProjectContainer">
+
+<p class="subtab_right">
+
+<span class="RatingStar EmptyRatingStar" onclick="toggleFavoriteProject();return false;" style="cursor:pointer;padding-right: 25px;"></span>
+
+
+    <a href="http://inputsimulator.codeplex.com/team/view">104 people</a> following this project
+
+
+<a id="followLink" href="#" onclick="toggleFavoriteProject();return false;">(follow)</a>
+</p></div>
+
+
+    </div>
+
+    
+
+    <div id="ctl00_ctl00_MasterContent_ProjectContentPanel">
+	
+        
+<div id="left_column">
+    
+
+    <div class="WikiHolder">
+
+        
+            <div id="WikiContent" class="WikiContent">
+                <div class="wikidoc"><h1>Project Description</h1>The Windows Input Simulator provides a simple .NET &#40;C&#35;&#41; interface to simulate Keyboard or Mouse input using the Win32 SendInput method. All of the Interop is done for you and there&#39;s a simple programming model for sending multiple keystrokes.<br /><br />Windows Forms provides the SendKeys method which can simulate text entry, but not actual key strokes.  Windows Input Simulator can be used in WPF, Windows Forms and Console Applications to synthesize or simulate any Keyboard input including Control, Alt, Shift, Tab, Enter, Space, Backspace, the Windows Key, Caps Lock, Num Lock, Scroll Lock, Volume Up/Down and Mute, Web, Mail, Search, Favorites, Function Keys, Back and Forward navigation keys, Programmable keys and any other key defined in the <a href="http://msdn.microsoft.com/en-us/library/dd375731%28VS.85%29.aspx">Virtual Key table</a>.  It provides a simple API to simulate text entry, key down, key up, key press and complex modified key strokes and chords.<br /><br /><img src="http://i3.codeplex.com/Download?ProjectName=inputsimulator&DownloadId=98052" alt="InputSimulator&#32;Intellisense" title="InputSimulator&#32;Intellisense" /><br />
+<h2>Examples</h2><b>Example: Single key press</b><br /><div style="color:Black;background-color:White;"><pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> PressTheSpacebar()
+{
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.SPACE);
+}
+</pre></div><br /><b>Example: Key-down and Key-up</b><br /><div style="color:Black;background-color:White;"><pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> ShoutHello()
+{
+  <span style="color:Green;">// Simulate each key stroke</span>
+  InputSimulator.SimulateKeyDown(VirtualKeyCode.SHIFT);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_H);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_E);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_L);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_L);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_O);
+  InputSimulator.SimulateKeyPress(VirtualKeyCode.VK_1);
+  InputSimulator.SimulateKeyUp(VirtualKeyCode.SHIFT);
+
+  <span style="color:Green;">// Alternatively you can simulate text entry to acheive the same end result</span>
+  InputSimulator.SimulateTextEntry(<span style="color:#A31515;">&quot;HELLO!&quot;</span>);
+}
+</pre></div><br /><b>Example: Modified keystrokes such as CTRL-C</b><br /><div style="color:Black;background-color:White;"><pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> SimulateSomeModifiedKeystrokes()
+{
+  <span style="color:Green;">// CTRL-C (effectively a copy command in many situations)</span>
+  InputSimulator.SimulateModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
+
+  <span style="color:Green;">// You can simulate chords with multiple modifiers</span>
+  <span style="color:Green;">// For example CTRL-K-C whic is simulated as</span>
+  <span style="color:Green;">// CTRL-down, K, C, CTRL-up</span>
+  InputSimulator.SimulateModifiedKeyStroke(VirtualKeyCode.CONTROL, <span style="color:Blue;">new</span> [] {VirtualKeyCode.VK_K, VirtualKeyCode.VK_C});
+
+  <span style="color:Green;">// You can simulate complex chords with multiple modifiers and key presses</span>
+  <span style="color:Green;">// For example CTRL-ALT-SHIFT-ESC-K which is simulated as</span>
+  <span style="color:Green;">// CTRL-down, ALT-down, SHIFT-down, press ESC, press K, SHIFT-up, ALT-up, CTRL-up</span>
+  InputSimulator.SimulateModifiedKeyStroke(
+    <span style="color:Blue;">new</span>[] { VirtualKeyCode.CONTROL, VirtualKeyCode.MENU, VirtualKeyCode.SHIFT },
+    <span style="color:Blue;">new</span>[] { VirtualKeyCode.ESCAPE, VirtualKeyCode.VK_K });
+}
+</pre></div><br /><b>Example: Simulate text entry</b><br /><div style="color:Black;background-color:White;"><pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> SayHello()
+{
+  InputSimulator.SimulateTextEntry(<span style="color:#A31515;">&quot;Say hello!&quot;</span>);
+}
+</pre></div><br /><b>Example: Determine the state of different types of keys</b><br /><div style="color:Black;background-color:White;"><pre>
+<span style="color:Blue;">public</span> <span style="color:Blue;">void</span> GetKeyStatus()
+{
+  <span style="color:Green;">// Determines if the shift key is currently down</span>
+  <span style="color:Blue;">var</span> isShiftKeyDown = InputSimulator.IsKeyDown(VirtualKeyCode.SHIFT);
+
+  <span style="color:Green;">// Determines if the caps lock key is currently in effect (toggled on)</span>
+  <span style="color:Blue;">var</span> isCapsLockOn = InputSimulator.IsTogglingKeyInEffect(VirtualKeyCode.CAPITAL);
+}
+</pre></div>
+<h2>History</h2>It was originally written for use in the <a href="http://wpfkb.codeplex.com">WpfKB (WPF Touch Screen Keyboard)</a> project to simulate real keyboard entry to the active window. After looking for a comprehensive wrapper for the Win32 and User32 input simulation methods and coming up dry I decided to write and open-source this project. I hope it helps someone out there!<br />
+<h2>Comments and Contributions</h2>Feel free to comment, log issues/suggestions, or even better contribute to the project!</div><div class="ClearBoth"></div>
+            </div>
+        
+                <p>Last edited <span class="smartDate" title="12/23/2009 5:19:27 AM" LocalTimeTicks="1261574367">Dec 23 2009 at 5:19 AM</span> by <a id="wikiEditByLink" href="http://www.codeplex.com/site/users/view/michaelnoonan">michaelnoonan</a>, version 9</p>
+            
+    </div>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#deleteWikiHyperLink').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', true, '30em');
+            });
+            $('#DeleteButton').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', false);
+                CodePlex.UpdateProgress.show();
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'http://inputsimulator.codeplex.com/',
+                    data: {title: $('#WikiTitle').val()},
+                    success: function (data) {
+                        CodePlex.UpdateProgress.hide();
+                        window.location = data;
+                    },
+                    error: function (data) {
+                        CodePlex.UpdateProgress.hide();
+                    }
+                });
+            });
+            $('#CancelButton').click(function () {
+                OpenDialog('#DeleteWikiPagePanel', false);
+            });
+            
+            
+        });
+    </script>
+</div>
+
+        
+	<div id="right_sidebar">
+        
+
+<input name="" type="text" maxlength="500" id="wiki_search" /><a id="SearchButton" class="wiki_magnify" href="#"></a>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $('#wiki_search').keypress(function (e) {
+            if (e.keyCode == 13) {
+                wikiSearch();
+                return false;
+            }
+        });
+
+        $('#SearchButton').click(function () {
+            wikiSearch();
+            return false;
+        });
+
+        $('#wiki_search').promptBox('Search Wiki & Documentation');
+
+    });
+    function setWikiCommentTextBoxFocus() {
+        $('#Comment').focus();
+        return false;
+    }
+
+    function wikiSearch() {
+        var $textbox = $('#wiki_search');
+        if($textbox.attr('dirty') != 'true')
+            return;
+        var searchText = encodeURIComponent(jQuery.trim($textbox.val()));
+        if(searchText != null & searchText.length > 0)
+            window.location.href = 'http://inputsimulator.codeplex.com/wiki/search?tab=Home&SearchText=' + searchText;
+    }
+
+</script>
+                <a id="download_button"
+                    href="#"
+                    d:postUrl="http://inputsimulator.codeplex.com/releases/captureDownload"
+                    d:fileid="98050"
+                    d:clickoncepath=""
+                    onclick="return $.release.fn.downloadFile(this);">
+                    download
+                </a>
+                
+<div id="ClickOnceOperaPanel" class="modal" style="display: none;">
+    <div class="row">
+        <h2>Opera does not support ClickOnce <a href="javascript:return false;" class="close">X</a></h2>
+    </div>
+    <div class="modal_info">
+        <div class="Body">
+            To install this application, save it and then open it.  Opening it directly from Opera will not work correctly.
+        </div>
+        <div class="modal_buttons">
+            <input type="button" class="ok" onclick="operaContinue();" value="Ok" />
+        </div>    
+        <div class="ClearBoth"></div>
+    </div>
+</div><input name="__RequestVerificationToken" type="hidden" value="Zoar_v39ih8PbMIE8XY5vH99DzdmgHBeVz54QryNn3S3h4VgBC1KRLcuxJSF4Xa_QHXfSxol4FGWRUcb1b9MyL_a3j2-xZM5MnnQu51tM94dFcH2VjZhB0ymVUEequAkKesTFg2" />
+        
+	<div id="current_rating">
+        <table width="100%">
+            <tr>
+    			<td><span class="rating_header">current</span></td>
+    			<td>InputSimulator 0.1.0.0</td>
+            </tr>
+            <tr>
+    			<th><span class="rating_header">date</span></th>
+    			<td><span class="smartDate full" title="12/20/2009 9:00:00 AM" LocalTimeTicks="1261328400">Sun Dec 20 2009 at 9:00 AM</span></td>
+            </tr>
+            <tr>
+    			<th><span class="rating_header">status</span></th>
+    			<td>Stable</td>
+            </tr>
+            <tr>
+    			<th><span class="rating_header">downloads</span></th>
+    			<td>18,407</td>
+            </tr>
+            <tr>
+    			<td><span class="rating_header">rating</span></td>
+                <td>
+                    <span id="releaseRatingContainer" class="RatingStarContainer" title="4.9 star rating"><span id="releaseRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="releaseRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="releaseRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="releaseRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="releaseRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="releaseratingName"></span><input id="releasecurrentRating" type="hidden" value="4.9" /></span>
+                    <span class="right">
+                        20 ratings
+                    </span>
+                    <br />
+                </td>
+            </tr>
+        </table>
+    </div>
+
+	<div id="recent_reviews">
+	    <h2>recent reviews</h2>
+        
+            <p class="review"><span id="RatingContainer" class="RatingStarContainer" title="5 star rating"><span id="Rating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="ratingName"></span><input id="currentRating" type="hidden" value="5" /></span>&#64;duybk&#10;Use&#10;            List&#60;WindowsInput.VirtualKeyCode&#62; modifierKeyCodes &#61; new List&#60;WindowsInput.VirtualKeyCode&#62;&#40;&#41;&#59;&#10;            mod... <a href="http://inputsimulator.codeplex.com/releases/view/37570#ReviewsAnchor">(more)</a></p>
+        
+            <p class="review"><span id="RatingContainer" class="RatingStarContainer" title="5 star rating"><span id="Rating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="Rating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="ratingName"></span><input id="currentRating" type="hidden" value="5" /></span>Absolutely brilliant. I&#39;ve been struggling to find a good example for Alt-Tabbing through windows from a C&#35; program, and they were a... <a href="http://inputsimulator.codeplex.com/releases/view/37570#ReviewsAnchor">(more)</a></p>
+        
+        <a id="view_all_reviews" href="http://inputsimulator.codeplex.com/releases/view/37570#ReviewsAnchor">View all reviews</a>
+        <div class="clear"></div>
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#PageActivity .Link').click(function () {
+                var val = $(this).attr('d:value');
+                $.post('http://inputsimulator.codeplex.com/stats/getActivity',
+                    { period: val },
+                    function (data) {
+                        $('#PageActivity span').hide();
+                        $('#PageActivity .Link').show();
+                        $('#Page' + val + 'Label').show();
+                        $('#Page' + val + 'Link').hide();
+                        $('#pageViews').text(data.PageViews);
+                        $('#visits').text(data.Visits);
+                        $('#downloads').text(data.Downloads);
+                    }, 'json');
+                return false;
+            });
+        });
+</script>
+<div id="activity">
+	<h2>activity</h2>
+
+	<div class="clear"></div>
+
+    <table>
+	    <tr>
+            <th class="t_heading">page views</th>
+            <th class="t_heading">visits</th>
+            <th class="t_heading">downloads</th>
+	    </tr>
+		<tr>
+			<td><span id="pageViews">1281</span></td>
+			<td><span id="visits">549</span></td>
+			<td><span id="downloads">224</span></td>
+		</tr>
+    </table>
+
+	<ul id="PageActivity"> 
+		<li>Days: </li>
+		<li>
+		    <span id="Page7Label">7</span>
+            <a id="Page7Link" href="#" class="Link" style="display:none;" d:value="7">7</a>
+		</li>
+		<li>
+		    <span id="Page30Label" style="display:none;">30</span>
+            <a id="Page30Link" href="#" class="Link" d:value="30">30</a>
+		</li>
+		<li>
+		    <span id="Page-1Label" style="display:none;">All</span>
+            <a id="Page-1Link" href="#" class="Link" d:value="-1">All</a>
+		</li>
+        <li id="activity_details"><a href="http://inputsimulator.codeplex.com/stats">Details</a></li>
+	</ul>
+
+</div>
+
+	<div id="related_projects">
+		<h2>related projects</h2>
+
+        
+            <p><a href="http://wpfkb.codeplex.com/">WPF Touch Screen Keyboard</a></p>
+        
+	</div>
+
+    </div>
+
+    
+</div>
+
+
+
+	<div class="clear"></div><!--keep footer down-->
+
+    <div id="footer">
+        <div class="row">
+            <hr />
+            <ul>
+                <li>© 2006-2012 Microsoft</li>
+                <li><a href="http://www.codeplex.com/site/help">Get Help</a></li>
+                <li><a href="/site/legal/privacy">Privacy Statement</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/terms">Terms of Use</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/conduct">Code of Conduct</a></li>
+                <li><a href="http://www.lakequincy.com" target="_blank">Advertise With Us</a></li>
+                <li>Version 9.5.2012.19356</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</form>
+</body></html>

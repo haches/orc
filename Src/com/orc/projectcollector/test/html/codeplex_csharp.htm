@@ -1,0 +1,1749 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="Chrome ">
+
+<head id="ctl00_ctl00_HeadTag"><meta id="ctl00_ctl00_CompatabilityMode" http-equiv="X-UA-Compatible" content="IE=edge" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link id="ctl00_ctl00_MasterCss" type="text/css" rel="stylesheet" href="http://i1.codeplex.com/css/v19356/i1979399/StyleSheet.ashx" /><link rel="SHORTCUT ICON" href="../favicon.ico" />
+    <link rel="Alternate" type="application/rss+xml" title="CodePlex" href="http://www.codeplex.com/site/feeds/rss" />
+    
+    <title>
+        Project Directory
+    </title>
+    
+    <style type="text/css">.SideBar, .SideBarPadding{display:none;}.SiteContent{padding:0;}.MainContent{width:auto;}.SiteContentTable{width:100%;}</style>
+    <style id="ctl00_ctl00_Header_Header_ProjectDirectoryStyles" type="text/css">.Grid,.Grid th,.Grid td{border:none 0 !important;text-align:left;padding-top:.4em;padding-bottom:.4em;vertical-align:top;}.IE6 table.Grid{width:0%;}.ResultColumnHeaderRowSeparator td{height:auto;margin:0;padding:0;}.ResultColumnHeaderRowSeparator hr{margin:0;padding:0;}.ResultColumnHeaderRow{color:#878D81;font-size:0.85em;text-transform:uppercase;margin-right:5px;border-top:solid 0.1em #879999;border-bottom:solid 0.1em #879999;}.Opening{margin:.7em;border:none;width:auto;}.Opening div.OpeningDescription{padding:.5em;color:#529900;font-size:1.1em;}.Opening div.wikidoc{vertical-align:top;}.OpeningDate{font-size:.75em;color:#666666;}</style>
+
+    <script type="text/javascript">
+        function getParamsCallback(newSearch) {
+            if (newSearch === undefined) {
+                newSearch = true;
+                $('#devStatusRefinement').val('');
+                $('#tagRefinement').val('');
+            }
+
+            var originalSearchText = 'C\x23';
+            var searchText = encodeURIComponent($('#search_directory_bar').val());
+            var stableOnly = $('#stableOnly').is(':checked');
+            var licenses = $('#selectedLicenses').val();
+            var tags = $('#tagRefinement').val();
+            var advancedSearch = $('#usingAdvancedSearch').val();
+            var developmentStatusParam = '';
+            var sort = (newSearch && searchText.length > 0 && searchText != originalSearchText && searchText != ' ') ? 'Relevance' : $('#sortBy').val();
+            if (advancedSearch == 'True') {
+                developmentStatusParam = $('#advancedDevelopmentStatus').val();
+            } else {
+                developmentStatusParam = $('#devStatusRefinement').val();
+            }
+
+            return ((advancedSearch != 'True' && stableOnly) ? '&stableOnly=true' : '') +
+                   ((sort != undefined && sort.length > 0) ? '&sortBy=' + sort : '') +
+                   ((developmentStatusParam != null && developmentStatusParam.length > 0) ? '&devStatus=' + developmentStatusParam : '') +
+                   ((tags != undefined && tags.length > 0) ? '&tagName=' + tags : '') +
+                   ((advancedSearch == 'True') ? '&advSearch=true' : '') +
+                   ((licenses.length > 0) ? '&licenses=' + licenses : '') +
+                   (newSearch ? '' : '&refinedSearch=true');
+        }
+        function getSearchParams(newSearch) {
+            var searchBoxVal;
+            if (newSearch) {
+                var searchBoxVal = encodeURIComponent($('#search_directory_bar').val());
+                if (searchBoxVal == ' ') searchBoxVal = '';
+                $('#previousSearchValue').val(searchBoxVal);
+            }
+            else {
+                searchBoxVal = encodeURIComponent($('#previousSearchValue').val());
+            }
+
+            return '?query=' + searchBoxVal + getParamsCallback(newSearch);         
+        }
+        function getSearchParamsPaging() {
+            return getSearchParams(false);
+        }
+        function newSearch() {
+            search(true);
+        }
+        function search(newSearch) {
+            window.location.href = '/site/search' + getSearchParams(newSearch);
+        }
+        function refineDevStatus(to) {
+            $('#devStatusRefinement').val(to);
+            search(false);
+        }
+        function refineTags(tag, shouldAdd) {
+            var current = $('#tagRefinement').val();
+            if (shouldAdd) {
+                current += (current.length == 0) ? '%2c' + tag : tag;
+                current += '%2c';
+            } else {
+                var regEx = new RegExp("\%2c" + tag + "\%2c");
+                current = current.replace(regEx, '%2c');
+                if (current == '%2c') current = '';
+            }
+            $('#tagRefinement').val(current);
+            search(false);
+        }
+        
+        function toggleSearch() {
+            var newText = 'Simple Search';
+            var currentState = $('#usingAdvancedSearch').val();
+            if (currentState == 'False' || currentState == '') {
+                $('#simpleSearch').hide();
+                $('#advancedSearch').show();
+                $('.ResultsPane').addClass('ResultsAdvSearchPadding');
+                $('.RefinementPane').addClass('RefinmentAdvSearchPadding');
+                $('#usingAdvancedSearch').val('True');
+            } else {
+                newText = 'Advanced Search';
+                $('#advancedSearch').hide();
+                $('#simpleSearch').show();
+                $('.ResultsPane').removeClass('ResultsAdvSearchPadding');
+                $('.RefinementPane').removeClass('RefinmentAdvSearchPadding');
+                $('#usingAdvancedSearch').val('False');
+            }
+
+            $('#advancedViewToggle').text(newText);
+        }
+        function showLicensesForm() {
+            OpenDialog('#licenseSelection', true, '36em'); 
+        }
+        function selectLicenses() {
+            var licenses = '';
+            var fullList = '';
+            var licensesTitle = '';
+            $('#licenseSelection :checkbox:checked').each(function() {
+                if (licenses.length > 0) { licenses += '%2c'; fullList += ', '; licensesTitle += ', '; }
+                licenses += jQuery.trim($(this).val());
+                fullList += '<span title=\"' + jQuery.trim($('#licenseLabel' + $(this).val()).text()) + '\">' + jQuery.trim($(this).val()) + '</span>';
+                licensesTitle += jQuery.trim($('#licenseLabel' + $(this).val().replace('.', '')).text());
+            });
+            $('#selectedLicenses').val(licenses + "|" + licensesTitle);
+            $('#licensesDisplay').empty().append(((fullList.length > 0) ? fullList : 'any') + ' ');
+            OpenDialog('#licenseSelection', false);
+        }
+        function toggleAllLicenses() {
+            var checked = ($('#licenseSelection :checkbox:checked').length == $('#licenseSelection :checkbox').length);
+            if (checked === undefined)
+                checked = false;
+            checked = !(checked.toString().toLowerCase() == 'true');
+            $('#licenseSelection :checkbox').each(function() {$(this).attr('checked', checked);$(this).click();$(this).attr('checked', checked);});
+            $('#toggleAllLicensesLink').text(checked ? 'Unselect All' : 'Select All');
+            $('#toggleAllLicensesLink').attr('checked', checked.toString());
+        }
+        function toggleLicenseCheckbox() {
+            var allChecked = ($('#licenseSelection :checkbox:checked').length == $('#licenseSelection :checkbox').length);
+            $('#toggleAllLicensesLink').text(allChecked ? 'Unselect All' : 'Select All');
+        }
+        function preserveCheckedLicenses() {
+            if ($('#selectedLicenses').val().length == 0 || $('#selectedLicenses').val() == "|") {
+                $('#licenseSelection :checkbox').each(function() { $(this).attr('checked', false) });
+
+            }
+            else {
+                $('#licenseSelection :checkbox').each(function() {
+                    $(this).attr('checked', IsThisLicenseSelected($(this).val()));
+                });
+            }
+
+            toggleLicenseCheckbox();
+        }
+
+        function IsThisLicenseSelected(code) {
+
+            if ($('#selectedLicenses').val().length > 0 && $('#selectedLicenses').val() != "|") {
+                var licenseCodes = $('#selectedLicenses').val().split("|")[0];
+                licenseCodes = licenseCodes.split("%2c");
+                for (x = 0; x < licenseCodes.length; x++) {
+                    if (licenseCodes[x] == code) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }
+    </script>
+
+
+<title>
+
+</title></head>
+
+<body>
+    <form name="aspnetForm" method="POST" action="/site/search?query=C%23&amp;ac=8" id="aspnetForm" autocomplete="off" enctype="multipart/form-data">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTk1NTQxNDYxNg9kFgJmD2QWAmYPZBYEZg9kFgZmDxYCHgdjb250ZW50BQdJRT1lZGdlZAICDxYCHgRocmVmBTpodHRwOi8vaTEuY29kZXBsZXguY29tL2Nzcy92MTkzNTYvaTE5NzkzOTkvU3R5bGVTaGVldC5hc2h4ZAIED2QWAmYPZBYCAgEPFgIeCWlubmVyaHRtbAX+BC5HcmlkLC5HcmlkIHRoLC5HcmlkIHRke2JvcmRlcjpub25lIDAgIWltcG9ydGFudDt0ZXh0LWFsaWduOmxlZnQ7cGFkZGluZy10b3A6LjRlbTtwYWRkaW5nLWJvdHRvbTouNGVtO3ZlcnRpY2FsLWFsaWduOnRvcDt9LklFNiB0YWJsZS5Hcmlke3dpZHRoOjAlO30uUmVzdWx0Q29sdW1uSGVhZGVyUm93U2VwYXJhdG9yIHRke2hlaWdodDphdXRvO21hcmdpbjowO3BhZGRpbmc6MDt9LlJlc3VsdENvbHVtbkhlYWRlclJvd1NlcGFyYXRvciBocnttYXJnaW46MDtwYWRkaW5nOjA7fS5SZXN1bHRDb2x1bW5IZWFkZXJSb3d7Y29sb3I6Izg3OEQ4MTtmb250LXNpemU6MC44NWVtO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTttYXJnaW4tcmlnaHQ6NXB4O2JvcmRlci10b3A6c29saWQgMC4xZW0gIzg3OTk5OTtib3JkZXItYm90dG9tOnNvbGlkIDAuMWVtICM4Nzk5OTk7fS5PcGVuaW5ne21hcmdpbjouN2VtO2JvcmRlcjpub25lO3dpZHRoOmF1dG87fS5PcGVuaW5nIGRpdi5PcGVuaW5nRGVzY3JpcHRpb257cGFkZGluZzouNWVtO2NvbG9yOiM1Mjk5MDA7Zm9udC1zaXplOjEuMWVtO30uT3BlbmluZyBkaXYud2lraWRvY3t2ZXJ0aWNhbC1hbGlnbjp0b3A7fS5PcGVuaW5nRGF0ZXtmb250LXNpemU6Ljc1ZW07Y29sb3I6IzY2NjY2Njt9ZAIBD2QWBGYPFgIeBFRleHQFZTxzY3JpcHQgc3JjPSJodHRwczovL3NpdGVyZWNydWl0LmNvbXNjb3JlLmNvbS9zci9jb2RlcGxleC9icm9rZXIuanMiIHR5cGU9InRleHQvamF2YXNjcmlwdCI+PC9zY3JpcHQ+ZAIBDw8WAh4ISW1hZ2VVcmwFLmh0dHA6Ly9pMy5jb2RlcGxleC5jb20vSW1hZ2VzL3YxOTM1Ni9ibGFuay5wbmcWAh4Gb25sb2FkBRlzZWxmLmxvZ29JbWFnZUxvYWRlZD10cnVlZGSNd4vGyodt6K/thL1oz/RTfqrBJw==" />
+</div>
+
+    <!--
+    Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code,
+    not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx.
+    -->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.6/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="http://i1.codeplex.com/scripts/v19356/i7/ScriptLoader.ashx" type="text/javascript"></script>
+        
+<div id="UpdateProgressPanel" class="loading_animation" style="display:none;">
+    <div class="row">
+        <h2 class="anim_h2">
+            <span id="UpdateProgressText">Updating...</span>
+            <span id="animatedLoadingIconContainer">
+                <img id="animatedLoadingIcon" src="http://i3.codeplex.com/Images/v19356/loading_animation.gif" class="anim_img"/>
+            </span>
+        </h2>
+    </div>
+</div>
+<div style="display: none;">
+    <div id="Analytics" style="width: 70%">
+        <script src="https://siterecruit.comscore.com/sr/codeplex/broker.js" type="text/javascript"></script>
+        <img id="ctl00_ctl00_BlankImage" onload="self.logoImageLoaded=true" src="http://i3.codeplex.com/Images/v19356/blank.png" style="height:0px;width:0px;border-width:0px;" />
+        <script language="javascript" type="text/javascript">
+            var date = new Date();
+            var timezoneOffset = date.getTimezoneOffset() / 60 * -1;
+            var timezoneOffsetCookie = getCookie("TimezoneOffset");
+            var firstTimeSetTimezoneCookie = false;
+
+            if (timezoneOffsetCookie == null || timezoneOffsetCookie != timezoneOffset) {
+                firstTimeSetTimezoneCookie = true;
+                document.cookie = "TimezoneOffset=" + timezoneOffset + '; domain=.codeplex.com;expires=Fri, 13 Sep 2013 00:21:25 UTC';
+            }
+        </script>
+        
+            <noscript><a href="http://www.omniture.com" title="Web Analytics">
+                <img src="http://msstonojstemp.112.2O7.net/b/ss/msstonojstemp/1/H.20.2--NS/0" height="1" width="1" border="0" alt="" />
+            </a></noscript>
+               
+    </div>
+</div>
+
+<div id="header">
+    <div id="header_wrap" class="row">
+	    <p id="logo"><a href="http://www.codeplex.com">Code<span class="semi">Plex</span></a><span id="tagline">Project Hosting for Open Source Software</span></p>
+        
+        
+        <ul id="nav">
+            
+    	    <li><a href="/site/register/new" id="registerLink" class="ZoomFix">Register</a></li>
+            <li ><a id=signInLink class='SignInLink' href='https://www.codeplex.com/site/login?RedirectUrl=http%3a%2f%2fmysqlbackupnet.codeplex.com%2fsite%2fsearch%3fquery%3dC%2523%26ac%3d8%26ProjectName%3dmysqlbackupnet'>Sign In</a></li>
+            <li class="last"><a class="rss_site_icon" href="http://www.codeplex.com/site/feeds/rss" type="application/rss+xml" rel="Alternate" title="CodePlex Site Activity"></a></li>
+        </ul>
+    
+        
+
+<input id="searchsite" name="searchsite" maxlength="500" type="text" value="" /><span id="search_mag"><a id="submitSearch" name="submitSearch" class="magnify" title="Search" href="#"></a></span>
+<script>
+	$(document).ready(function() {
+    $loadScript('http://i4.services.social.microsoft.com/search/Widgets/SearchBox.jss?appid=1000&scopeid=1&boxId=searchsite&btnId=submitSearch&watermark=Search%20all%20projects&overrideWatermark=true&searchLocation=%2fsite%2fsearch&allowEmptySearch=true&focusOnInit=False&minimumTermLength=3');
+    if (typeof epx_loaded === 'undefined' || !epx_loaded) {
+        $('#submitSearch').bind('click', doProjectSearch);
+        $('#searchsite').bind('keypress', function(e) { if ($keyCode(e) === 13) { doProjectSearch(); return false; } });
+    }
+})
+function doProjectSearch() {
+    
+    var url = '/site/search';
+
+    //If search term is not same as watermark
+    if($('#searchsite').val() != 'Search all projects')    
+    {        
+        url = url + '?query=' + encodeURIComponent($('#searchsite').val());
+    }
+
+    
+    var callback = '';
+    if (callback.length > 0 && eval('typeof ' + callback) != 'undefined')
+        url += eval(callback + '()');
+    window.location.href = url;
+    return false;
+}
+</script>
+
+    </div>
+</div>
+
+<div id="wrap">
+
+    
+
+	<div id="sub_heading" class="row">
+		<div class="row" id="search_directory_wrap">
+            <input id="search_directory_bar" maxlength="500" name="search_directory_bar" tabindex="1" type="text" value="C#" />
+			<a id="submitLocalSearch" name="submitLocalSearch" class="directory_magnify" tabindex="4" href="#"></a>
+            <script>
+	$(document).ready(function() {
+    $loadScript('http://i4.services.social.microsoft.com/search/Widgets/SearchBox.jss?appid=1000&scopeid=1&boxId=search_directory_bar&btnId=submitLocalSearch&watermark=%20&overrideWatermark=true&searchLocation=%2fsite%2fsearch&allowEmptySearch=true&focusOnInit=False&minimumTermLength=3&paramsCallback=getParamsCallback');
+    if (typeof epx_loaded === 'undefined' || !epx_loaded) {
+        $('#submitLocalSearch').bind('click', doProjectSearch);
+        $('#search_directory_bar').bind('keypress', function(e) { if ($keyCode(e) === 13) { doProjectSearch(); return false; } });
+    }
+})
+function doProjectSearch() {
+    
+    var url = '/site/search';
+
+    //If search term is not same as watermark
+    if($('#search_directory_bar').val() != ' ')    
+    {        
+        url = url + '?query=' + encodeURIComponent($('#search_directory_bar').val());
+    }
+
+    
+    var callback = 'getParamsCallback';
+    if (callback.length > 0 && eval('typeof ' + callback) != 'undefined')
+        url += eval(callback + '()');
+    window.location.href = url;
+    return false;
+}
+</script>
+            <input id="previousSearchValue" name="previousSearchValue" type="hidden" value="C#" />
+            
+                <a id="advancedViewToggle" class="advanced_search" href="#" rel="nofollow" onclick="toggleSearch();return false;" tabindex="5">Advanced Search</a>
+                <input id="usingAdvancedSearch" name="usingAdvancedSearch" type="hidden" value="False" />
+                <div id="simpleSearch" >
+				    <p class="search_checkbox">
+				        <input id="stableOnly" name="stableOnly" onclick="newSearch()" tabindex="2" type="checkbox" value="true" /><label for="stableOnly">Exclude releases still in development</label><input name="stableOnly" type="hidden" value="false" />
+				    </p>
+                </div>
+                <div id="advancedSearch"  style="display:none;">
+                    <div class="advancedLeftColumn">
+                        and with <strong>Development Status</strong>:</div>
+                    <div class="advancedRightColumn">
+                        <select id="advancedDevelopmentStatus" name="advancedDevelopmentStatus" onchange="newSearch()" tabindex="2"><option value="">any</option>
+<option value="2">Alpha or better</option>
+<option value="3">Beta or better</option>
+<option value="4">Stable only</option>
+</select>
+                    </div>
+                    <br />
+                    <div class="advancedLeftColumn">
+                        and with <strong>License Type</strong>:</div>
+                    <div class="advancedRightColumn">
+                        <span id="licensesDisplay">
+                            
+                            any
+                            
+                        </span><a id="changeLicenses" href="#" onclick="showLicensesForm();return false;" tabindex="3">change</a>
+                    </div>
+                </div>
+            
+        </div>
+
+    	<div id="left_column_search">
+        	<ul id="leftColumnWidth_pagination">
+                <li><span class="Selected">1</span>-<span class="Selected">25</span> of <span class="Selected">3004</span> projects sorted by <select id="sortBy" name="sortBy" onchange="search(false);" tabindex="6"><option selected="selected" value="Relevance">Relevance</option>
+<option value="DownloadCount">Downloads</option>
+<option value="PageViews">Page Views</option>
+<option value="PublishedDate">Project Start Date</option>
+<option value="CurrentReleaseRating">Ratings</option>
+<option value="CurrentReleaseDate">Release Date</option>
+<option value="Title">Title</option>
+</select></li>
+                <ul class="leftColumnWidth_right">
+	<li>Showing</li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 10);return false;">10</a></li><li><span class="Selected">25</span></li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 50);return false;">50</a></li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 100);return false;">100</a></li><li>projects</li>
+</ul><a href="/site/search?size=2147483647" class="Link" style="display: none;">View All</a>
+    		</ul>
+
+        	<table id="search_directory">
+                
+			        <tr>
+				        <th><h2 style="padding-left: 10px;">project name</h2></th>
+				        <th class="recommended_release"><h2>recommended release</h2></th>
+			        </tr>
+                
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://cosmos.codeplex.com/">Cosmos &#40;<span class='HighlightItem'>C&#35;</span> Open Source Managed Operating System&#41;</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>A complete operating system written in <span class='HighlightItem'>C&#35;</span>.</p>
+
+		    <p class="search_info">Page Views: <span class="green">5677</span>   |   Downloads: <span class="green">410</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="8/29/2007 12:19:35 PM" LocalTimeTicks="1188415175">Aug 29 2007</span>   |   Contributors: <a href="http://cosmos.codeplex.com/team/view">98</a>   |   License: <a href="http://cosmos.codeplex.com/license">BSD</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('compiler', true);return false;" rel="nofollow" title="Refine results by compiler (17)">compiler</a>, 
+                    
+                        <a href="#" onclick="refineTags('cool', true);return false;" rel="nofollow" title="Refine results by cool (20)">cool</a>, 
+                    
+                        <a href="#" onclick="refineTags('operating%20system', true);return false;" rel="nofollow" title="Refine results by operating system (6)">operating system</a>, 
+                    
+                        <a href="#" onclick="refineTags('os', true);return false;" rel="nofollow" title="Refine results by os (2)">os</a>, 
+                    
+                        <a href="#" onclick="refineTags('Cosmos', true);return false;" rel="nofollow" title="Refine results by Cosmos (3)">Cosmos</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://cosmos.codeplex.com/releases/view/89628">Release 92560</a><br />
+				
+                    <span title="Beta: This software is probably stable enough for use">Beta</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="6/15/2012 9:00:00 AM" LocalTimeTicks="1339776000">Jun 15 2012</span><br />
+                <span id="release-CosmosRatingContainer" class="RatingStarContainer" title="5 star rating"><span id="release-CosmosRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CosmosRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CosmosRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CosmosRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CosmosRating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CosmosratingName"></span><input id="release-CosmoscurrentRating" type="hidden" value="5" /></span>
+                    3 ratings
+                    
+                        <br /><em>2 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://facebooksdk.codeplex.com/">Facebook <span class='HighlightItem'>C&#35;</span> SDK</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>The Facebook <span class='HighlightItem'>C&#35;</span> SDK helps .Net developers build web, desktop, Silverlight, and Windows Phone applications that integrate with Facebook.</p>
+
+		    <p class="search_info">Page Views: <span class="green">6776</span>   |   Downloads: <span class="green">451</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="5/16/2010 12:57:58 AM" LocalTimeTicks="1273996678">May 16 2010</span>   |   Contributors: <a href="http://facebooksdk.codeplex.com/team/view">3</a>   |   License: <a href="http://facebooksdk.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Controls', true);return false;" rel="nofollow" title="Refine results by Controls (21)">Controls</a>, 
+                    
+                        <a href="#" onclick="refineTags('Facebook', true);return false;" rel="nofollow" title="Refine results by Facebook (7)">Facebook</a>, 
+                    
+                        <a href="#" onclick="refineTags('sdk', true);return false;" rel="nofollow" title="Refine results by sdk (9)">sdk</a>, 
+                    
+                        <a href="#" onclick="refineTags('facebook%20.net%20', true);return false;" rel="nofollow" title="Refine results by facebook .net&nbsp; (1)">facebook .net </a>, 
+                    
+                        <a href="#" onclick="refineTags('Facebook%20API', true);return false;" rel="nofollow" title="Refine results by Facebook API (4)">Facebook API</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                There is no current release.
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://xunit.codeplex.com/">xUnit.net - Unit testing framework for <span class='HighlightItem'>C&#35;</span> and .NET &#40;a successor to NUnit&#41;</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>A unit testing framework for <span class='HighlightItem'>C&#35;</span> and .NET. Written by original inventor of NUnit. xUnit.net is the top rated framework for unit testing <span class='HighlightItem'>C&#35;</span> code.</p>
+
+		    <p class="search_info">Page Views: <span class="green">6522</span>   |   Downloads: <span class="green">510</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="9/21/2007 12:02:59 AM" LocalTimeTicks="1190358179">Sep 21 2007</span>   |   Contributors: <a href="http://xunit.codeplex.com/team/view">3</a>   |   License: <a href="http://xunit.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('TDD', true);return false;" rel="nofollow" title="Refine results by TDD (8)">TDD</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Unittest', true);return false;" rel="nofollow" title="Refine results by Unittest (1)">Unittest</a>, 
+                    
+                        <a href="#" onclick="refineTags('Testing', true);return false;" rel="nofollow" title="Refine results by Testing (19)">Testing</a>, 
+                    
+                        <a href="#" onclick="refineTags('Unit%20Testing', true);return false;" rel="nofollow" title="Refine results by Unit Testing (12)">Unit Testing</a>, 
+                    
+                        <a href="#" onclick="refineTags('testing%20framework', true);return false;" rel="nofollow" title="Refine results by testing framework (9)">testing framework</a>, 
+                    
+                        <a href="#" onclick="refineTags('xUnit', true);return false;" rel="nofollow" title="Refine results by xUnit (3)">xUnit</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://xunit.codeplex.com/releases/view/90058">xUnit.net 1.9.1</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="7/4/2012 9:00:00 AM" LocalTimeTicks="1341417600">Jul 4 2012</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://csharpdesignpatterns.codeplex.com/">Tutorial&#58; Common Design Patterns in <span class='HighlightItem'>C&#35;</span> 4.0</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>Tutorial&#58; Common Design Patterns in <span class='HighlightItem'>C&#35;</span> 4.0</p>
+
+		    <p class="search_info">Page Views: <span class="green">3013</span>   |   Downloads: <span class="green">21</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="5/1/2011 1:38:07 PM" LocalTimeTicks="1304282287">May 1 2011</span>   |   Contributors: <a href="http://csharpdesignpatterns.codeplex.com/team/view">1</a>   |   License: <a href="http://csharpdesignpatterns.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('design%20patterns', true);return false;" rel="nofollow" title="Refine results by design patterns (13)">design patterns</a>, 
+                    
+                        <a href="#" onclick="refineTags('Adapter', true);return false;" rel="nofollow" title="Refine results by Adapter (1)">Adapter</a>, 
+                    
+                        <a href="#" onclick="refineTags('bridge', true);return false;" rel="nofollow" title="Refine results by bridge (3)">bridge</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%204.0', true);return false;" rel="nofollow" title="Refine results by .NET 4.0 (58)">.NET 4.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('builder', true);return false;" rel="nofollow" title="Refine results by builder (1)">builder</a>, 
+                    
+                        <a href="#" onclick="refineTags('Abstract%20Factory', true);return false;" rel="nofollow" title="Refine results by Abstract Factory (1)">Abstract Factory</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                There is no current release.
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://ajaxcontroltoolkit.codeplex.com/">AJAX Control Toolkit</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>The AJAX Control Toolkit is a collection of samples and components which make it easier than ever to build and consume rich client-side controls and extenders built on the Microsoft AJAX Library and ASP.NET 2.0 AJAX Extensions. The Toolkit provides both ready to go samples and...</p>
+
+		    <p class="search_info">Page Views: <span class="green">47813</span>   |   Downloads: <span class="green">16036</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="5/1/2006 9:59:48 PM" LocalTimeTicks="1146545988">May 1 2006</span>   |   Contributors: <a href="http://ajaxcontroltoolkit.codeplex.com/team/view">10</a>   |   License: <a href="http://ajaxcontroltoolkit.codeplex.com/license">BSD</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('Atlas', true);return false;" rel="nofollow" title="Refine results by Atlas (1)">Atlas</a>, 
+                    
+                        <a href="#" onclick="refineTags('Ajax', true);return false;" rel="nofollow" title="Refine results by Ajax (26)">Ajax</a>, 
+                    
+                        <a href="#" onclick="refineTags('ASP.NET', true);return false;" rel="nofollow" title="Refine results by ASP.NET (101)">ASP.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Toolkit', true);return false;" rel="nofollow" title="Refine results by Toolkit (12)">Toolkit</a>, 
+                    
+                        <a href="#" onclick="refineTags('AJAX%20Toolkit', true);return false;" rel="nofollow" title="Refine results by AJAX Toolkit (1)">AJAX Toolkit</a>, 
+                    
+                        <a href="#" onclick="refineTags('AJAX%20Control%20Toolkit', true);return false;" rel="nofollow" title="Refine results by AJAX Control Toolkit (6)">AJAX Control Toolkit</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://ajaxcontroltoolkit.codeplex.com/releases/view/90063">June 2012 Release</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="6/23/2012 9:00:00 AM" LocalTimeTicks="1340467200">Jun 23 2012</span><br />
+                <span id="release-AjaxControlToolkitRatingContainer" class="RatingStarContainer" title="4.2 star rating"><span id="release-AjaxControlToolkitRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-AjaxControlToolkitRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-AjaxControlToolkitRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-AjaxControlToolkitRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-AjaxControlToolkitRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-AjaxControlToolkitratingName"></span><input id="release-AjaxControlToolkitcurrentRating" type="hidden" value="4.25" /></span>
+                    4 ratings
+                    
+                        <br /><em>3 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://csharpguidelines.codeplex.com/">Coding Guidelines for <span class='HighlightItem'>C&#35;</span> 3.0 and <span class='HighlightItem'>C&#35;</span> 4.0</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>A set of coding guidelines for <span class='HighlightItem'>C&#35;</span> 3.0 and <span class='HighlightItem'>C&#35;</span> 4.0, design principles, layout rules, FxCop rulesets and &#40;upcoming&#41; custom FxCop and StyleCop rules for improving the overal quality of your code developement. </p>
+
+		    <p class="search_info">Page Views: <span class="green">2097</span>   |   Downloads: <span class="green">663</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="5/29/2010 11:16:19 AM" LocalTimeTicks="1275156979">May 29 2010</span>   |   Contributors: <a href="http://csharpguidelines.codeplex.com/team/view">2</a>   |   License: <a href="http://csharpguidelines.codeplex.com/license">BSD</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23%203.0', true);return false;" rel="nofollow" title="Refine results by C&#35; 3.0 (33)"><span class='HighlightItem'>C&#35;</span> 3.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('FxCop', true);return false;" rel="nofollow" title="Refine results by FxCop (4)">FxCop</a>, 
+                    
+                        <a href="#" onclick="refineTags('guidelines', true);return false;" rel="nofollow" title="Refine results by guidelines (2)">guidelines</a>, 
+                    
+                        <a href="#" onclick="refineTags('StyleCop', true);return false;" rel="nofollow" title="Refine results by StyleCop (3)">StyleCop</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%204.0', true);return false;" rel="nofollow" title="Refine results by C&#35; 4.0 (27)"><span class='HighlightItem'>C&#35;</span> 4.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('Coding%20Standard', true);return false;" rel="nofollow" title="Refine results by Coding Standard (1)">Coding Standard</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://csharpguidelines.codeplex.com/releases/view/46280">Coding Guidelines for CSharp 3.0 and 4.0</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="1/4/2011 9:00:00 AM" LocalTimeTicks="1294160400">Jan 4 2011</span><br />
+                <span id="release-csharpguidelinesRatingContainer" class="RatingStarContainer" title="5 star rating"><span id="release-csharpguidelinesRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csharpguidelinesRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csharpguidelinesRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csharpguidelinesRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csharpguidelinesRating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csharpguidelinesratingName"></span><input id="release-csharpguidelinescurrentRating" type="hidden" value="5" /></span>
+                    4 ratings
+                    
+                        <br /><em>4 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://sharpsnmplib.codeplex.com/"><span class='HighlightItem'>C&#35;</span> Based Open Source SNMP for .NET and Mono</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>&#35;SNMP &#40;SharpSNMP&#41; Suite is a set of free SNMP tools based on an open source library for developers who target Microsoft .NET&#47;Xamarin Mono platforms. It&#39;s developed in <span class='HighlightItem'>C&#35;</span> and can be used for VB.NET, Delphi Prism, and more.</p>
+
+		    <p class="search_info">Page Views: <span class="green">2702</span>   |   Downloads: <span class="green">309</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="4/26/2008 1:57:33 PM" LocalTimeTicks="1209243453">Apr 26 2008</span>   |   Contributors: <a href="http://sharpsnmplib.codeplex.com/team/view">8</a>   |   License: <a href="http://sharpsnmplib.codeplex.com/license">LGPL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%202.0', true);return false;" rel="nofollow" title="Refine results by .NET 2.0 (46)">.NET 2.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('networking', true);return false;" rel="nofollow" title="Refine results by networking (9)">networking</a>, 
+                    
+                        <a href="#" onclick="refineTags('.net%203.0', true);return false;" rel="nofollow" title="Refine results by .net 3.0 (11)">.net 3.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%203.5', true);return false;" rel="nofollow" title="Refine results by .NET 3.5 (70)">.NET 3.5</a>, 
+                    
+                        <a href="#" onclick="refineTags('snmp', true);return false;" rel="nofollow" title="Refine results by snmp (1)">snmp</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%20CF', true);return false;" rel="nofollow" title="Refine results by .NET CF (2)">.NET CF</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://sharpsnmplib.codeplex.com/releases/view/78947">BigDipper Refresh &#40;7.5&#41;</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="5/10/2012 9:00:00 AM" LocalTimeTicks="1336665600">May 10 2012</span><br />
+                <span id="release-sharpsnmplibRatingContainer" class="RatingStarContainer" title="5 star rating"><span id="release-sharpsnmplibRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-sharpsnmplibRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-sharpsnmplibRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-sharpsnmplibRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-sharpsnmplibRating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-sharpsnmplibratingName"></span><input id="release-sharpsnmplibcurrentRating" type="hidden" value="5" /></span>
+                    2 ratings
+                    
+                        <br /><em>1 review</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://sharpcompress.codeplex.com/">SharpCompress - a fully native <span class='HighlightItem'>C&#35;</span> library for RAR, 7Zip, Zip, Tar, GZip, BZip2</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>SharpCompress is a compression library for .NET&#47;Mono&#47;Silverlight&#47;WP7 that can unrar, un7zip, unzip, untar unbzip2 and ungzip with forward-only reading and file random access APIs. Write support for zip&#47;tar&#47;bzip2&#47;gzip is implemented.&#13;&#10;&#13;&#10;The major feature is support for non-seek...</p>
+
+		    <p class="search_info">Page Views: <span class="green">1403</span>   |   Downloads: <span class="green">124</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="4/12/2011 1:49:56 PM" LocalTimeTicks="1302641396">Apr 12 2011</span>   |   Contributors: <a href="http://sharpcompress.codeplex.com/team/view">2</a>   |   License: <a href="http://sharpcompress.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Silverlight', true);return false;" rel="nofollow" title="Refine results by Silverlight (66)">Silverlight</a>, 
+                    
+                        <a href="#" onclick="refineTags('tar', true);return false;" rel="nofollow" title="Refine results by tar (1)">tar</a>, 
+                    
+                        <a href="#" onclick="refineTags('GZip', true);return false;" rel="nofollow" title="Refine results by GZip (1)">GZip</a>, 
+                    
+                        <a href="#" onclick="refineTags('7zip', true);return false;" rel="nofollow" title="Refine results by 7zip (2)">7zip</a>, 
+                    
+                        <a href="#" onclick="refineTags('Bzip2', true);return false;" rel="nofollow" title="Refine results by Bzip2 (2)">Bzip2</a>, 
+                    
+                        <a href="#" onclick="refineTags('SharpCompress', true);return false;" rel="nofollow" title="Refine results by SharpCompress (1)">SharpCompress</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://sharpcompress.codeplex.com/releases/view/87844">SharpCompress 0.8.1</a><br />
+				
+                    <span title="Beta: This software is probably stable enough for use">Beta</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="5/15/2012 9:00:00 AM" LocalTimeTicks="1337097600">May 15 2012</span><br />
+                
+                    <em>There are currently no ratings</em><br />
+                    <em>5 star rating in previous release</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://inputsimulator.codeplex.com/">Windows Input Simulator &#40;<span class='HighlightItem'>C&#35;</span> SendInput Wrapper - Simulate Keyboard and Mouse&#41;</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>The Windows Input Simulator provides a simple .NET &#40;<span class='HighlightItem'>C&#35;</span>&#41; interface to simulate Keyboard or Mouse input using the Win32 SendInput method. All of the Interop is done for you and there&#39;s a simple programming model for sending multiple keystrokes.</p>
+
+		    <p class="search_info">Page Views: <span class="green">1281</span>   |   Downloads: <span class="green">224</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="12/21/2009 12:59:39 AM" LocalTimeTicks="1261385979">Dec 21 2009</span>   |   Contributors: <a href="http://inputsimulator.codeplex.com/team/view">1</a>   |   License: <a href="http://inputsimulator.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('interop', true);return false;" rel="nofollow" title="Refine results by interop (7)">interop</a>, 
+                    
+                        <a href="#" onclick="refineTags('Keyboard', true);return false;" rel="nofollow" title="Refine results by Keyboard (5)">Keyboard</a>, 
+                    
+                        <a href="#" onclick="refineTags('Mouse', true);return false;" rel="nofollow" title="Refine results by Mouse (4)">Mouse</a>, 
+                    
+                        <a href="#" onclick="refineTags('keypress', true);return false;" rel="nofollow" title="Refine results by keypress (2)">keypress</a>, 
+                    
+                        <a href="#" onclick="refineTags('SendInput', true);return false;" rel="nofollow" title="Refine results by SendInput (1)">SendInput</a>, 
+                    
+                        <a href="#" onclick="refineTags('SendKeys', true);return false;" rel="nofollow" title="Refine results by SendKeys (1)">SendKeys</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://inputsimulator.codeplex.com/releases/view/37570">InputSimulator 0.1.0.0</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="12/20/2009 9:00:00 AM" LocalTimeTicks="1261328400">Dec 20 2009</span><br />
+                <span id="release-inputsimulatorRatingContainer" class="RatingStarContainer" title="4.9 star rating"><span id="release-inputsimulatorRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-inputsimulatorRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-inputsimulatorRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-inputsimulatorRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-inputsimulatorRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-inputsimulatorratingName"></span><input id="release-inputsimulatorcurrentRating" type="hidden" value="4.9" /></span>
+                    20 ratings
+                    
+                        <br /><em>20 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://jquerymobile.codeplex.com/">jQuery Mobile <span class='HighlightItem'>C&#35;</span> ASP.NET</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>jQuery Mobile content management system <span class='HighlightItem'>C&#35;</span> ASP.NET mobile touch-optimized web Framework for Smartphones &#38; Tablets &#40;Using Visual Studio 2010 &#38; SQL 2012 DB&#41;.</p>
+
+		    <p class="search_info">Page Views: <span class="green">2041</span>   |   Downloads: <span class="green">148</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="2/25/2012 10:34:48 PM" LocalTimeTicks="1330238088">Feb 25 2012</span>   |   Contributors: <a href="http://jquerymobile.codeplex.com/team/view">86</a>   |   License: <a href="http://jquerymobile.codeplex.com/license">LGPL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('CMS', true);return false;" rel="nofollow" title="Refine results by CMS (25)">CMS</a>, 
+                    
+                        <a href="#" onclick="refineTags('cms%20ajax', true);return false;" rel="nofollow" title="Refine results by cms ajax (2)">cms ajax</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%204.0', true);return false;" rel="nofollow" title="Refine results by C&#35; 4.0 (27)"><span class='HighlightItem'>C&#35;</span> 4.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('CMS%20Mobile', true);return false;" rel="nofollow" title="Refine results by CMS Mobile (1)">CMS Mobile</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%20Mobile', true);return false;" rel="nofollow" title="Refine results by C&#35; Mobile (1)"><span class='HighlightItem'>C&#35;</span> Mobile</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://jquerymobile.codeplex.com/releases/view/92592">jquerymobile-18450.zip</a><br />
+				
+                    <span title="Alpha: Use this software at your own risk">Alpha</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="8/11/2012 9:00:00 AM" LocalTimeTicks="1344700800">Aug 11 2012</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://easywebcam.codeplex.com/">WebCam Library for WinForm and WPF with <span class='HighlightItem'>C&#35;</span> and VB.NET</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>Developer can add one line of code for display video from webcam and capture image from webcam. It provide dialog for resolution setting and advance setting &#40;Flip,Rotate, Brightness etc.&#41; by adding one line of code.</p>
+
+		    <p class="search_info">Page Views: <span class="green">1117</span>   |   Downloads: <span class="green">216</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="12/12/2009 8:53:57 PM" LocalTimeTicks="1260680037">Dec 12 2009</span>   |   Contributors: <a href="http://easywebcam.codeplex.com/team/view">1</a>   |   License: <a href="http://easywebcam.codeplex.com/license">MIT</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('winform', true);return false;" rel="nofollow" title="Refine results by winform (3)">winform</a>, 
+                    
+                        <a href="#" onclick="refineTags('VB.NET', true);return false;" rel="nofollow" title="Refine results by VB.NET (40)">VB.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('WPF', true);return false;" rel="nofollow" title="Refine results by WPF (88)">WPF</a>, 
+                    
+                        <a href="#" onclick="refineTags('Webcam', true);return false;" rel="nofollow" title="Refine results by Webcam (7)">Webcam</a>, 
+                    
+                        <a href="#" onclick="refineTags('capture%20image', true);return false;" rel="nofollow" title="Refine results by capture image (1)">capture image</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://easywebcam.codeplex.com/releases/view/37187">EasyWebCam Library and Example</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="12/12/2009 9:00:00 AM" LocalTimeTicks="1260637200">Dec 12 2009</span><br />
+                <span id="release-easywebcamRatingContainer" class="RatingStarContainer" title="2.7 star rating"><span id="release-easywebcamRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-easywebcamRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-easywebcamRating_Star_2" class="RatingStar HalfRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-easywebcamRating_Star_3" class="RatingStar EmptyRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-easywebcamRating_Star_4" class="RatingStar EmptyRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-easywebcamratingName"></span><input id="release-easywebcamcurrentRating" type="hidden" value="2.666667" /></span>
+                    12 ratings
+                    
+                        <br /><em>12 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://webserver.codeplex.com/"><span class='HighlightItem'>C&#35;</span> WebServer</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>An embeddable and extensible web server that supports controllers, dynamic templates &#40;which are recompiled in runtime if changed on disc&#41;, haml, multiple web sites, reverse proxying, http digest, http basic auth and more.</p>
+
+		    <p class="search_info">Page Views: <span class="green">1747</span>   |   Downloads: <span class="green">191</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="4/13/2008 9:56:25 PM" LocalTimeTicks="1208148985">Apr 13 2008</span>   |   Contributors: <a href="http://webserver.codeplex.com/team/view">3</a>   |   License: <a href="http://webserver.codeplex.com/license">Apache</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%202.0', true);return false;" rel="nofollow" title="Refine results by .NET 2.0 (46)">.NET 2.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('embedded', true);return false;" rel="nofollow" title="Refine results by embedded (3)">embedded</a>, 
+                    
+                        <a href="#" onclick="refineTags('server', true);return false;" rel="nofollow" title="Refine results by server (4)">server</a>, 
+                    
+                        <a href="#" onclick="refineTags('webserver', true);return false;" rel="nofollow" title="Refine results by webserver (3)">webserver</a>, 
+                    
+                        <a href="#" onclick="refineTags('web%20server', true);return false;" rel="nofollow" title="Refine results by web server (3)">web server</a>, 
+                    
+                        <a href="#" onclick="refineTags('%2a', true);return false;" rel="nofollow" title="Refine results by &#42; (6)">&#42;</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://webserver.codeplex.com/releases/view/38163">v1.1</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="1/4/2010 9:00:00 AM" LocalTimeTicks="1262624400">Jan 4 2010</span><br />
+                <span id="release-webserverRatingContainer" class="RatingStarContainer" title="4.5 star rating"><span id="release-webserverRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-webserverRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-webserverRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-webserverRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-webserverRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-webserverratingName"></span><input id="release-webservercurrentRating" type="hidden" value="4.5" /></span>
+                    6 ratings
+                    
+                        <br /><em>4 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://dnpextensions.codeplex.com/">.NET Extensions Methods Library for <span class='HighlightItem'>C&#35;</span> and VB.NET &#40;ASP.NET, MVC, SL, WPF, EF&#41;</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>The .NET Extensions project is monthly updated library of <span class='HighlightItem'>C&#35;</span> und VB.NET extension methods for ASP.NET Web Forms, MVC, WPF, Silverlight and Entity Framework. It&#39;s part of a column published by Patrick A. Lorenz &#40;www.pgk.de&#41; in the German magazine &#34;dotnetpro&#34; &#40;www.dotnetpro.de&#41;.</p>
+
+		    <p class="search_info">Page Views: <span class="green">1021</span>   |   Downloads: <span class="green">157</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="3/20/2009 7:39:11 AM" LocalTimeTicks="1237559951">Mar 20 2009</span>   |   Contributors: <a href="http://dnpextensions.codeplex.com/team/view">42</a>   |   License: <a href="http://dnpextensions.codeplex.com/license">Apache</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('ASP.NET', true);return false;" rel="nofollow" title="Refine results by ASP.NET (101)">ASP.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Library', true);return false;" rel="nofollow" title="Refine results by Library (55)">Library</a>, 
+                    
+                        <a href="#" onclick="refineTags('extensions', true);return false;" rel="nofollow" title="Refine results by extensions (11)">extensions</a>, 
+                    
+                        <a href="#" onclick="refineTags('Extension%20Methods', true);return false;" rel="nofollow" title="Refine results by Extension Methods (14)">Extension Methods</a>, 
+                    
+                        <a href="#" onclick="refineTags('.net%20Excensions', true);return false;" rel="nofollow" title="Refine results by .net Excensions (1)">.net Excensions</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%20Extensions', true);return false;" rel="nofollow" title="Refine results by .NET Extensions (1)">.NET Extensions</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://dnpextensions.codeplex.com/releases/view/64619">Release 2011.06</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="4/17/2011 9:00:00 AM" LocalTimeTicks="1303056000">Apr 17 2011</span><br />
+                
+                    <em>There are currently no ratings</em><br />
+                    <em>5 star rating in previous release</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://ftplib.codeplex.com/"><span class='HighlightItem'>C&#35;</span> FTP Library</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>This library wraps the wininet.dll functions for FTP to create an effective way to interact with FTP servers using the <span class='HighlightItem'>C&#35;</span> language and the .Net framework. </p>
+
+		    <p class="search_info">Page Views: <span class="green">1315</span>   |   Downloads: <span class="green">159</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="10/30/2009 6:23:42 PM" LocalTimeTicks="1256952222">Oct 30 2009</span>   |   Contributors: <a href="http://ftplib.codeplex.com/team/view">2</a>   |   License: <a href="http://ftplib.codeplex.com/license">MIT</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('FTP', true);return false;" rel="nofollow" title="Refine results by FTP (4)">FTP</a>, 
+                    
+                        <a href="#" onclick="refineTags('FTP%20Client', true);return false;" rel="nofollow" title="Refine results by FTP Client (1)">FTP Client</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://ftplib.codeplex.com/releases/view/56358">FTPLib v.1.0.1.3</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="11/24/2010 9:00:00 AM" LocalTimeTicks="1290618000">Nov 24 2010</span><br />
+                <span id="release-ftplibRatingContainer" class="RatingStarContainer" title="4 star rating"><span id="release-ftplibRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-ftplibRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-ftplibRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-ftplibRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-ftplibRating_Star_4" class="RatingStar EmptyRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-ftplibratingName"></span><input id="release-ftplibcurrentRating" type="hidden" value="4" /></span>
+                    2 ratings
+                    
+                        <br /><em>1 review</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://globalmousekeyhook.codeplex.com/">Application and Global Mouse and Keyboard Hooks .Net Libary in <span class='HighlightItem'>C&#35;</span></a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>This library allows you to tap keyboard and mouse and to detect and record their activity even when an application is inactive and runs in background.</p>
+
+		    <p class="search_info">Page Views: <span class="green">1276</span>   |   Downloads: <span class="green">214</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="8/30/2011 10:08:09 PM" LocalTimeTicks="1314767289">Aug 30 2011</span>   |   Contributors: <a href="http://globalmousekeyhook.codeplex.com/team/view">6</a>   |   License: <a href="http://globalmousekeyhook.codeplex.com/license">BSD</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Keyboard', true);return false;" rel="nofollow" title="Refine results by Keyboard (5)">Keyboard</a>, 
+                    
+                        <a href="#" onclick="refineTags('Hook', true);return false;" rel="nofollow" title="Refine results by Hook (4)">Hook</a>, 
+                    
+                        <a href="#" onclick="refineTags('Global%20Hooks', true);return false;" rel="nofollow" title="Refine results by Global Hooks (1)">Global Hooks</a>, 
+                    
+                        <a href="#" onclick="refineTags('keyboard%20hook', true);return false;" rel="nofollow" title="Refine results by keyboard hook (1)">keyboard hook</a>, 
+                    
+                        <a href="#" onclick="refineTags('keyboard%20library', true);return false;" rel="nofollow" title="Refine results by keyboard library (1)">keyboard library</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://globalmousekeyhook.codeplex.com/releases/view/73244">V3 Community Release</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="9/5/2011 9:00:00 AM" LocalTimeTicks="1315238400">Sep 5 2011</span><br />
+                <span id="release-GlobalMouseKeyHookRatingContainer" class="RatingStarContainer" title="5 star rating"><span id="release-GlobalMouseKeyHookRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-GlobalMouseKeyHookRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-GlobalMouseKeyHookRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-GlobalMouseKeyHookRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-GlobalMouseKeyHookRating_Star_4" class="RatingStar FilledRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-GlobalMouseKeyHookratingName"></span><input id="release-GlobalMouseKeyHookcurrentRating" type="hidden" value="5" /></span>
+                    8 ratings
+                    
+                        <br /><em>6 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://jsonclassgenerator.codeplex.com/">JSON <span class='HighlightItem'>C&#35;</span> Class Generator</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>This application generates <span class='HighlightItem'>C&#35;</span> classes from a sample JSON text, so you can use strongly typed programming with JSON.&#13;&#10;It currently supports typed arrays, typed objects, integers, floats, booleans, strings and nullable types.&#13;&#10;</p>
+
+		    <p class="search_info">Page Views: <span class="green">953</span>   |   Downloads: <span class="green">187</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="11/1/2010 6:36:55 PM" LocalTimeTicks="1288661815">Nov 1 2010</span>   |   Contributors: <a href="http://jsonclassgenerator.codeplex.com/team/view">1</a>   |   License: <a href="http://jsonclassgenerator.codeplex.com/license">Ms-RL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('Class%20Generator', true);return false;" rel="nofollow" title="Refine results by Class Generator (2)">Class Generator</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://jsonclassgenerator.codeplex.com/releases/view/92418">JSON CSharp Class Generator 1.3</a><br />
+				
+                    <span title="Beta: This software is probably stable enough for use">Beta</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="8/8/2012 9:00:00 AM" LocalTimeTicks="1344441600">Aug 8 2012</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://csparser.codeplex.com/"><span class='HighlightItem'>C&#35;</span> Parser</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>A handwritten CSharp parser.&#13;&#10;</p>
+
+		    <p class="search_info">Page Views: <span class="green">384</span>   |   Downloads: <span class="green">40</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="1/9/2007 10:37:15 AM" LocalTimeTicks="1168367835">Jan 9 2007</span>   |   Contributors: <a href="http://csparser.codeplex.com/team/view">8</a>   |   License: <a href="http://csparser.codeplex.com/license">MIT</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('watch', true);return false;" rel="nofollow" title="Refine results by watch (13)">watch</a>, 
+                    
+                        <a href="#" onclick="refineTags('parser', true);return false;" rel="nofollow" title="Refine results by parser (16)">parser</a>, 
+                    
+                        <a href="#" onclick="refineTags('language', true);return false;" rel="nofollow" title="Refine results by language (7)">language</a>, 
+                    
+                        <a href="#" onclick="refineTags('Query', true);return false;" rel="nofollow" title="Refine results by Query (4)">Query</a>, 
+                    
+                        <a href="#" onclick="refineTags('Source%20Code', true);return false;" rel="nofollow" title="Refine results by Source Code (5)">Source Code</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%20Parser', true);return false;" rel="nofollow" title="Refine results by C&#35; Parser (2)"><span class='HighlightItem'>C&#35;</span> Parser</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://csparser.codeplex.com/releases/view/16290">CSParser_1.0_src</a><br />
+				
+                -
+                <span class="smartDate dateOnlyNoShort" title="8/14/2008 9:00:00 AM" LocalTimeTicks="1218729600">Aug 14 2008</span><br />
+                <span id="release-csparserRatingContainer" class="RatingStarContainer" title="4 star rating"><span id="release-csparserRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csparserRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csparserRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csparserRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csparserRating_Star_4" class="RatingStar EmptyRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-csparserratingName"></span><input id="release-csparsercurrentRating" type="hidden" value="4" /></span>
+                    3 ratings
+                    
+                        <br /><em>2 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://caliburnmicro.codeplex.com/">Caliburn Micro&#58; WPF, Silverlight, WP7 and WinRT&#47;Metro made easy.</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>A small, yet powerful framework designed for WPF, Silverlight and WP7. It implements a variety of UI patterns for solving real-world problems. Patterns that are highlighted include MVVM &#40;Presentation Model&#41;, MVP and MVC.</p>
+
+		    <p class="search_info">Page Views: <span class="green">15920</span>   |   Downloads: <span class="green">487</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="7/4/2010 10:43:46 PM" LocalTimeTicks="1278308626">Jul 4 2010</span>   |   Contributors: <a href="http://caliburnmicro.codeplex.com/team/view">9</a>   |   License: <a href="http://caliburnmicro.codeplex.com/license">MIT</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('WPF', true);return false;" rel="nofollow" title="Refine results by WPF (88)">WPF</a>, 
+                    
+                        <a href="#" onclick="refineTags('MVP', true);return false;" rel="nofollow" title="Refine results by MVP (8)">MVP</a>, 
+                    
+                        <a href="#" onclick="refineTags('MVC', true);return false;" rel="nofollow" title="Refine results by MVC (35)">MVC</a>, 
+                    
+                        <a href="#" onclick="refineTags('Silverlight', true);return false;" rel="nofollow" title="Refine results by Silverlight (66)">Silverlight</a>, 
+                    
+                        <a href="#" onclick="refineTags('MVVM', true);return false;" rel="nofollow" title="Refine results by MVVM (29)">MVVM</a>, 
+                    
+                        <a href="#" onclick="refineTags('WP7', true);return false;" rel="nofollow" title="Refine results by WP7 (16)">WP7</a>, 
+                    
+                        <a href="#" onclick="refineTags('WinRT', true);return false;" rel="nofollow" title="Refine results by WinRT (2)">WinRT</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://caliburnmicro.codeplex.com/releases/view/81466">Caliburn.Micro v1.3.1</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="1/31/2012 9:00:00 AM" LocalTimeTicks="1328029200">Jan 31 2012</span><br />
+                <span id="release-caliburnmicroRatingContainer" class="RatingStarContainer" title="4.7 star rating"><span id="release-caliburnmicroRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-caliburnmicroRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-caliburnmicroRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-caliburnmicroRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-caliburnmicroRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-caliburnmicroratingName"></span><input id="release-caliburnmicrocurrentRating" type="hidden" value="4.733333" /></span>
+                    15 ratings
+                    
+                        <br /><em>13 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://ndatabase.codeplex.com/">NDatabase - <span class='HighlightItem'>C&#35;</span> Lightweight Object Database</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>This project creates lightweight object database dedicated for .NET. The purpose of this project is to give a developer possibility to persist any object in <span class='HighlightItem'>C&#35;</span>.</p>
+
+		    <p class="search_info">Page Views: <span class="green">484</span>   |   Downloads: <span class="green">37</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="8/24/2012 9:17:39 PM" LocalTimeTicks="1345868259">Aug 24 2012</span>   |   Contributors: <a href="http://ndatabase.codeplex.com/team/view">1</a>   |   License: <a href="http://ndatabase.codeplex.com/license">LGPL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('mono', true);return false;" rel="nofollow" title="Refine results by mono (19)">mono</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%203.5', true);return false;" rel="nofollow" title="Refine results by .NET 3.5 (70)">.NET 3.5</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%20database', true);return false;" rel="nofollow" title="Refine results by C&#35; database (2)"><span class='HighlightItem'>C&#35;</span> database</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%204.0', true);return false;" rel="nofollow" title="Refine results by .NET 4.0 (58)">.NET 4.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('.NET%204.5', true);return false;" rel="nofollow" title="Refine results by .NET 4.5 (7)">.NET 4.5</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://ndatabase.codeplex.com/releases/view/93916">NDatabase 1.0.3 Release</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="9/5/2012 9:00:00 AM" LocalTimeTicks="1346860800">Sep 5 2012</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://videoplayer.codeplex.com/">ASP.NET Embedded Video Player &#40;YouTube&#8482; API, <span class='HighlightItem'>C&#35;</span>&#41;</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>ASP.NET Embedded Video Player &#40;YouTube&#8482; API, <span class='HighlightItem'>C&#35;</span>&#41;</p>
+
+		    <p class="search_info">Page Views: <span class="green">777</span>   |   Downloads: <span class="green">87</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="7/19/2009 2:08:26 AM" LocalTimeTicks="1247994506">Jul 19 2009</span>   |   Contributors: <a href="http://videoplayer.codeplex.com/team/view">1</a>   |   License: <a href="http://videoplayer.codeplex.com/license">Ms-PL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('ASP.NET', true);return false;" rel="nofollow" title="Refine results by ASP.NET (101)">ASP.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('audio', true);return false;" rel="nofollow" title="Refine results by audio (9)">audio</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23%203.0', true);return false;" rel="nofollow" title="Refine results by C&#35; 3.0 (33)"><span class='HighlightItem'>C&#35;</span> 3.0</a>, 
+                    
+                        <a href="#" onclick="refineTags('ASP.NET%20Ajax', true);return false;" rel="nofollow" title="Refine results by ASP.NET Ajax (9)">ASP.NET Ajax</a>, 
+                    
+                        <a href="#" onclick="refineTags('ASP.NET%203.5', true);return false;" rel="nofollow" title="Refine results by ASP.NET 3.5 (20)">ASP.NET 3.5</a>, 
+                    
+                        <a href="#" onclick="refineTags('ASP.NET%204.0', true);return false;" rel="nofollow" title="Refine results by ASP.NET 4.0 (8)">ASP.NET 4.0</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://videoplayer.codeplex.com/releases/view/30359">Embedded_YouTube_script_generator</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="11/4/2009 9:00:00 AM" LocalTimeTicks="1257354000">Nov 4 2009</span><br />
+                <span id="release-VideoPlayerRatingContainer" class="RatingStarContainer" title="3.3 star rating"><span id="release-VideoPlayerRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-VideoPlayerRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-VideoPlayerRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-VideoPlayerRating_Star_3" class="RatingStar HalfRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-VideoPlayerRating_Star_4" class="RatingStar EmptyRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-VideoPlayerratingName"></span><input id="release-VideoPlayercurrentRating" type="hidden" value="3.333333" /></span>
+                    3 ratings
+                    
+                        <br /><em>2 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://compositewpf.codeplex.com/">patterns &#38; practices&#58; Prism</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>Prism provides guidance designed to help you more easily design and build rich, flexible, and easy-to-maintain Windows Presentation Foundation &#40;WPF&#41; desktop applications, Silverlight Rich Internet Applications &#40;RIAs&#41;, and Windows Phone 7 applications.</p>
+
+		    <p class="search_info">Page Views: <span class="green">14675</span>   |   Downloads: <span class="green">989</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="2/27/2008 12:18:12 PM" LocalTimeTicks="1204143492">Feb 27 2008</span>   |   Contributors: <a href="http://compositewpf.codeplex.com/team/view">9</a>   |   License: <a href="http://compositewpf.codeplex.com/license">Custom</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('p%26p', true);return false;" rel="nofollow" title="Refine results by p&#38;p (2)">p&#38;p</a>, 
+                    
+                        <a href="#" onclick="refineTags('WPF', true);return false;" rel="nofollow" title="Refine results by WPF (88)">WPF</a>, 
+                    
+                        <a href="#" onclick="refineTags('patterns%20%26%20practices', true);return false;" rel="nofollow" title="Refine results by patterns &#38; practices (12)">patterns &#38; practices</a>, 
+                    
+                        <a href="#" onclick="refineTags('Composite%20UI', true);return false;" rel="nofollow" title="Refine results by Composite UI (2)">Composite UI</a>, 
+                    
+                        <a href="#" onclick="refineTags('Silverlight', true);return false;" rel="nofollow" title="Refine results by Silverlight (66)">Silverlight</a>, 
+                    
+                        <a href="#" onclick="refineTags('Prism', true);return false;" rel="nofollow" title="Refine results by Prism (4)">Prism</a>, 
+                    
+                        <a href="#" onclick="refineTags('MVVM', true);return false;" rel="nofollow" title="Refine results by MVVM (29)">MVVM</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://compositewpf.codeplex.com/releases/view/55576">Prism 4 - November 2010</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="11/12/2010 9:00:00 AM" LocalTimeTicks="1289581200">Nov 12 2010</span><br />
+                <span id="release-CompositeWPFRatingContainer" class="RatingStarContainer" title="4.6 star rating"><span id="release-CompositeWPFRating_Star_0" class="RatingStar FilledRatingStar" d:rating="1" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CompositeWPFRating_Star_1" class="RatingStar FilledRatingStar" d:rating="2" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CompositeWPFRating_Star_2" class="RatingStar FilledRatingStar" d:rating="3" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CompositeWPFRating_Star_3" class="RatingStar FilledRatingStar" d:rating="4" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CompositeWPFRating_Star_4" class="RatingStar HalfRatingStar" d:rating="5" onclick="MvcValidation_ClearErrors('Rating');">&nbsp;</span><span id="release-CompositeWPFratingName"></span><input id="release-CompositeWPFcurrentRating" type="hidden" value="4.578948" /></span>
+                    19 ratings
+                    
+                        <br /><em>14 reviews</em>
+                    
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://codeconvert.codeplex.com/"><span class='HighlightItem'>C&#35;</span> to VB.NET VB.NET To <span class='HighlightItem'>C&#35;</span> Code Convertor</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>Visual Studio buildin VB.Net To <span class='HighlightItem'>C&#35;</span> , <span class='HighlightItem'>C&#35;</span> To VB.Net Convertor using NRefactor from icsharpcode&#39;s SharpDevelop.&#10;The project add an entry to the <span class='HighlightItem'>C&#35;</span> documents and VB documents right click menus, called depending on the open document type,&#10;<span class='HighlightItem'>C&#35;</span> To VB.Net or VB.Net To <span class='HighlightItem'>C&#35;</span> Entries.</p>
+
+		    <p class="search_info">Page Views: <span class="green">413</span>   |   Downloads: <span class="green">82</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="7/19/2009 2:51:32 PM" LocalTimeTicks="1248040292">Jul 19 2009</span>   |   Contributors: <a href="http://codeconvert.codeplex.com/team/view">2</a>   |   License: <a href="http://codeconvert.codeplex.com/license">LGPL</a></p>
+
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://codeconvert.codeplex.com/releases/view/44032">CSharp To VB.Net Convertor VS2010 Support</a><br />
+				
+                    <span title="Beta: This software is probably stable enough for use">Beta</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="4/20/2010 9:00:00 AM" LocalTimeTicks="1271779200">Apr 20 2010</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://telnetcsharp.codeplex.com/">Telnet <span class='HighlightItem'>C&#35;</span></a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>Telnet <span class='HighlightItem'>C&#35;</span> is a client emulating a virtual display for controlling tasks on a remote computer. Primary goal is to run commands in a way to send a request and checking the answer. It is not primarily meant as basis for a normal telnet client, but more for running batch jobs via ...</p>
+
+		    <p class="search_info">Page Views: <span class="green">361</span>   |   Downloads: <span class="green">51</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="7/29/2011 5:22:46 PM" LocalTimeTicks="1311985366">Jul 29 2011</span>   |   Contributors: <a href="http://telnetcsharp.codeplex.com/team/view">4</a>   |   License: <a href="http://telnetcsharp.codeplex.com/license">EPL</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('.NET', true);return false;" rel="nofollow" title="Refine results by .NET (155)">.NET</a>, 
+                    
+                        <a href="#" onclick="refineTags('C%23', true);return false;" rel="nofollow" title="Refine results by C&#35; (352)"><span class='HighlightItem'>C&#35;</span></a>, 
+                    
+                        <a href="#" onclick="refineTags('Open%20Source', true);return false;" rel="nofollow" title="Refine results by Open Source (8)">Open Source</a>, 
+                    
+                        <a href="#" onclick="refineTags('Telnet', true);return false;" rel="nofollow" title="Refine results by Telnet (2)">Telnet</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://telnetcsharp.codeplex.com/releases/view/70814">0.74 Legacy version as of March 2005</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="3/15/2005 9:00:00 AM" LocalTimeTicks="1110906000">Mar 15 2005</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://custommemberprovider.codeplex.com/"><span class='HighlightItem'>C&#35;</span> MVC3 Custom Membership Provider, Custom Roles, Razor Entity Framework &#38; LINQ</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p>This project demonstrates how to create a <span class='HighlightItem'>C&#35;</span> MVC3 Razor Entity Framework &#38; LINQ Custom Membership Provider with Custom Role Provider.&#13;&#10;&#13;&#10;Project by Nannette Thacker Shining Star Services LLC. http&#58;&#47;&#47;www.shiningstar.net&#13;&#10;</p>
+
+		    <p class="search_info">Page Views: <span class="green">346</span>   |   Downloads: <span class="green">72</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="1/11/2012 11:19:46 PM" LocalTimeTicks="1326352786">Jan 11 2012</span>   |   Contributors: <a href="http://custommemberprovider.codeplex.com/team/view">1</a>   |   License: <a href="http://custommemberprovider.codeplex.com/license">CDDL</a></p>
+
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://custommemberprovider.codeplex.com/releases/view/84184">MVC3 Entity Framework Custom Membership Provider</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="3/13/2012 9:00:00 AM" LocalTimeTicks="1331654400">Mar 13 2012</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+
+
+<tr>
+	<td>
+        <div id="search_directory_row">
+            <h3><a href="http://csharpmail.codeplex.com/"><span class='HighlightItem'>C&#35;</span>Mail</a></h3>
+            
+            <div class="clear"></div>
+            
+
+		    <p><span class='HighlightItem'>C&#35;</span>Mail is a library to send or receive mail written by <span class='HighlightItem'>C&#35;</span>.&#10;&#10;The basic class of Message is &#10;1---InternetTextMessage  class&#40;RFC822&#41;&#10;2---MimeContent class&#40;RFC2045-RFC2049&#41; &#10;3---MailAddress class&#40; &#34;MyName&#34; &#60;mymailaddress&#64;mydomain.com&#62;&#41; &#10;&#10;Pop3 functionality list is ...&#10;1---Authenti...</p>
+
+		    <p class="search_info">Page Views: <span class="green">344</span>   |   Downloads: <span class="green">23</span>   |   Started: <span class="smartDate dateOnlyNoShort" title="6/18/2008 1:50:51 AM" LocalTimeTicks="1213779051">Jun 18 2008</span>   |   Contributors: <a href="http://csharpmail.codeplex.com/team/view">4</a>   |   License: <a href="http://csharpmail.codeplex.com/license">Custom</a></p>
+
+            
+		    <p class="search_info">Tags:
+                
+                        <a href="#" onclick="refineTags('Email', true);return false;" rel="nofollow" title="Refine results by Email (7)">Email</a>, 
+                    
+                        <a href="#" onclick="refineTags('Mail', true);return false;" rel="nofollow" title="Refine results by Mail (3)">Mail</a>
+                    
+            </p>
+            
+        </div>
+    </td>
+    
+		<td>
+                
+                <a href="http://csharpmail.codeplex.com/releases/view/73428">Higuchi.Mail.dll &#40;2011.9.15version&#41;</a><br />
+				
+                    <span title="Stable: This software is believed to be ready for use">Stable</span>
+                
+                -
+                <span class="smartDate dateOnlyNoShort" title="9/15/2011 9:00:00 AM" LocalTimeTicks="1316102400">Sep 15 2011</span><br />
+                
+                    <em>There are currently no ratings</em>
+                
+        </td>
+    
+</tr>
+
+                </tr>
+                
+            </table>
+
+        	<ul id="leftColumnWidth_pagination">
+                <li><span class="Selected">1</span>-<span class="Selected">25</span> of <span class="Selected">3004</span> projects</li><ul class="pagination_pages">
+	<li>Previous</li><li><span class="Selected">1</span></li><li><a onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 1);return false;" href="#">2</a></li><li><a onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 2);return false;" href="#">3</a></li><li><a onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 3);return false;" href="#">4</a></li><li><a onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 4);return false;" href="#">5</a></li><li><a class="" href="#" onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 5);return false;">...</a></li><li class="last"><a href="#" onclick="CodePlexPaging.gotoPage(&#39;/site/search&#39;, 1);return false;">Next</a></li>
+</ul>
+                <ul class="projects_right">
+	<li>Showing</li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 10);return false;">10</a></li><li><span class="Selected">25</span></li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 50);return false;">50</a></li><li><a href="#" onclick="CodePlexPaging.gotoPageSize(&#39;/site/search&#39;, 100);return false;">100</a></li><li>projects</li>
+</ul><a href="/site/search?size=2147483647" class="Link" style="display: none;">View All</a>
+    		</ul>
+        </div>
+
+        <script type="text/javascript">CodePlexPaging.initialize('getSearchParamsPaging');</script>
+
+	    <div id="right_sidebar_search">
+            <input id="devStatusRefinement" name="devStatusRefinement" type="hidden" value="" />
+                <input id="tagRefinement" name="tagRefinement" type="hidden" value="" />
+                
+		                <div id="development_status">
+		                    <h2>development status</h2>
+			                <ul class="search_sidebar">
+                                
+                                   <li><a href="#" onclick="refineDevStatus('2');return false;">Alpha or better</a> (1549)</li>
+                                
+                                   <li><a href="#" onclick="refineDevStatus('3');return false;">Beta or better</a> (1282)</li>
+                                
+                                   <li><a href="#" onclick="refineDevStatus('4');return false;">Stable only</a> (880)</li>
+                                
+			                </ul>
+		                </div>
+                    
+		                <div id="sorted_tag">
+   			                <h2>sorted by tag</h2>
+   			                <ul class="search_sidebar">
+                                
+                                    <li><a href="#" onclick="refineTags('.NET', true);return false;">.NET</a> (155)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('.NET%202.0', true);return false;">.NET 2.0</a> (46)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('.NET%203.5', true);return false;">.NET 3.5</a> (70)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('.NET%204.0', true);return false;">.NET 4.0</a> (58)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('ASP.NET', true);return false;">ASP.NET</a> (101)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('C%23', true);return false;">C&#35;</a> (352)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('C%23%203.0', true);return false;">C&#35; 3.0</a> (33)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('crm', true);return false;">crm</a> (45)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('CRM%202011', true);return false;">CRM 2011</a> (31)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Framework', true);return false;">Framework</a> (49)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('javascript', true);return false;">javascript</a> (36)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Library', true);return false;">Library</a> (55)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('LINQ', true);return false;">LINQ</a> (31)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('MVC', true);return false;">MVC</a> (35)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('MVVM', true);return false;">MVVM</a> (29)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Sharepoint', true);return false;">Sharepoint</a> (63)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Silverlight', true);return false;">Silverlight</a> (66)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('SQL%20Server', true);return false;">SQL Server</a> (33)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Tools', true);return false;">Tools</a> (39)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('utility', true);return false;">utility</a> (37)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('VB.NET', true);return false;">VB.NET</a> (40)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('Visual%20Studio', true);return false;">Visual Studio</a> (51)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('wcf', true);return false;">wcf</a> (33)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('WPF', true);return false;">WPF</a> (88)</li>
+                                
+                                    <li><a href="#" onclick="refineTags('XNA', true);return false;">XNA</a> (37)</li>
+                                
+			                </ul>
+		                </div>
+                    
+        </div>
+    </div>
+
+    <div id="licenseSelection" class="modal" style="display: none">
+        <input id="selectedLicenses" name="selectedLicenses" type="hidden" value="|" />
+        <h2>Select License Types <a href="javascript:return false;" class="close">X</a></h2>
+        <div class="modal_info">
+            <p>The following open source license types are available on CodePlex. Select the ones you want to see in your search results.</p>
+            <a id="toggleAllLicensesLink" href="#" onclick="toggleAllLicenses();return false;" checked="False" >
+                Select All</a>
+                <ul style='width: 100%'>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseApache" value="Apache" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelApache" for="licenseApache">Apache License 2.0 (Apache)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseBSD" value="BSD" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelBSD" for="licenseBSD">New BSD License (BSD)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseCDDL" value="CDDL" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelCDDL" for="licenseCDDL">Common Development and Distribution License (CDDL)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseEPL" value="EPL" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelEPL" for="licenseEPL">Eclipse Public License (EPL)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseGPLv2" value="GPLv2" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelGPLv2" for="licenseGPLv2">GNU General Public License version 2 (GPLv2)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseLGPL" value="LGPL" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelLGPL" for="licenseLGPL">GNU Lesser General Public License (LGPL)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseMIT" value="MIT" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelMIT" for="licenseMIT">The MIT License (MIT)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseMPL-2.0" value="MPL-2.0" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelMPL-20" for="licenseMPL-2.0">Mozilla Public License 2.0 (MPL-2.0)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseMs-PL" value="Ms-PL" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelMs-PL" for="licenseMs-PL">Microsoft Public License (Ms-PL)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseMs-RL" value="Ms-RL" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelMs-RL" for="licenseMs-RL">Microsoft Reciprocal License (Ms-RL)</label>
+                    </li>
+                    
+                    <li>
+                        <input type="checkbox" name="license" id="licenseCustom" value="Custom" onclick="toggleLicenseCheckbox()"  />
+                        <label id="licenseLabelCustom" for="licenseCustom">Custom License</label>
+                    </li>
+                    
+                </ul>
+            <div class="modal_buttons">
+                <input type="button" class="cancel" value="cancel" onclick="OpenDialog('#licenseSelection', false);preserveCheckedLicenses();return false;"/>
+                <input type="button" class="ok" value="OK" onclick="selectLicenses();newSearch();return false;" />
+            </div>
+            <div class="ClearBoth"></div>
+        </div>
+    </div>
+
+
+
+	<div class="clear"></div><!--keep footer down-->
+
+    <div id="footer">
+        <div class="row">
+            <hr />
+            <ul>
+                <li>© 2006-2012 Microsoft</li>
+                <li><a href="http://www.codeplex.com/site/help">Get Help</a></li>
+                <li><a href="/site/legal/privacy">Privacy Statement</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/terms">Terms of Use</a></li>
+                <li><a href="http://www.codeplex.com/site/legal/conduct">Code of Conduct</a></li>
+                <li><a href="http://www.lakequincy.com" target="_blank">Advertise With Us</a></li>
+                <li>Version 9.5.2012.19356</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+</form>
+</body></html>
