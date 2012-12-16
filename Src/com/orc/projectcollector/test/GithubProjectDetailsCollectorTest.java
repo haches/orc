@@ -23,7 +23,7 @@ public class GithubProjectDetailsCollectorTest extends TestCase {
 		
 		GithubProjectDetailsCollector c = new GithubProjectDetailsCollector(null);
 		File html = new File(f.getPath());
-		ProjectDescription prj = new ProjectDescription(PlatformNames.Github, "mono", "https://github.com/mono/mono");
+		ProjectDescription prj = new ProjectDescription(PlatformNames.Github, "mono", "https://github.com/mono/mono", "csharp");
 		c.collectFromFile(prj, html.getPath());
 		
 		assertEquals("mono", prj.getName());
@@ -36,7 +36,7 @@ public class GithubProjectDetailsCollectorTest extends TestCase {
 	@Test
 	public void testCollectFromUrl() {
 		GithubProjectDetailsCollector c = new GithubProjectDetailsCollector(null);
-		ProjectDescription prj = new ProjectDescription(PlatformNames.Github, "mono", "https://github.com/mono/mono");
+		ProjectDescription prj = new ProjectDescription(PlatformNames.Github, "mono", "https://github.com/mono/mono", "csharp");
 		c.collect(prj);
 		
 		assertEquals("mono", prj.getName());

@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,9 +24,15 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.javautilities.database.DbUtil;
+import com.javautilities.database.manager.CommitMode;
+import com.javautilities.database.manager.DataManager;
+import com.javautilities.database.manager.DataManagerUtility;
+import com.javautilities.database.manager.DataTable;
+import com.javautilities.date.DateUtil;
+import com.javautilities.jsap.commandline.OptionFactory;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -101,6 +108,19 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 	 * If null, print result to standard output.
 	 */
 	private BufferedWriter outputWriter;
+	
+	private Connection con;
+	
+	protected Connection getConnection(JSAPResult config) {
+		Connection result = DbUtil.getConnection(
+				config.getString(OptionFactory.hostVar), 
+				config.getString(OptionFactory.schemaVar), 
+				"UTF-8", 
+				config.getString(OptionFactory.userVar),
+				config.getString(OptionFactory.passwordVar),
+				config.getInt(OptionFactory.portVar));
+		return result;
+	}	
 		
 	@Override
 	public void execute(String[] args) {
@@ -114,6 +134,9 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				org.apache.log4j.FileAppender appender = new FileAppender(new SimpleLayout(), logFile);
 				logger.addAppender(appender);
 				
+				if(config.contains(OptionFactory.schemaVar)) {
+					con = getConnection(config);
+				}
 				try{
 					if(config.contains(SC.outputVar)) {
 						outputWriter = new BufferedWriter(new FileWriter(new File(config.getString(SC.outputVar)), false));
@@ -238,12 +261,14 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				try{
 					s = Executors.newFixedThreadPool(tasks.size());
 					List<Future<ProjectDescription>> results = s.invokeAll(tasks);
+					LinkedList<ProjectDescription> ps = new LinkedList<ProjectDescription>(); 
 					for(Future<ProjectDescription> f : results) {
 						ProjectDescription prjDesp = f.get();
 						if(prjDesp!=null) {
-							storeProject(prjDesp);							
+							ps.add(prjDesp);													
 						}
 					}
+					storeProject(ps);
 				}catch(Exception e) {
 					Logging.log(logger, Level.ERROR, e);
 				}finally {
@@ -252,6 +277,37 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 					}
 				}
 			}
+		}
+	}
+		
+	private void storeProject(LinkedList<ProjectDescription> projects) {
+		if(con!=null) {
+			DataManager dm = DataManager.getInstance();
+			DataTable tbl = DataManagerUtility.newDataTable("osprojects", "projects", CommitMode.InsertOrElseUpdate, con, logger);
+			String now = DateUtil.getNowDate();
+			
+			for(ProjectDescription p : projects) {
+				String[] row = {
+						p.getPlatform(),
+						p.getName(),
+						p.getLanguage(),
+						p.getDescription(),
+						p.getVersionControlType(),
+						p.getSourceLink(),
+						p.getHomepage(),
+						String.valueOf(p.getFollow()),
+						String.valueOf(p.getStar()),
+						String.valueOf(p.getFork()),
+						p.getLabelsAsString(),
+						now
+					};
+				tbl.addRow(row);
+			}
+			dm.AddTableAndCommit(tbl, con, logger);			
+		}
+		
+		for(ProjectDescription p : projects) {
+			storeProject(p);
 		}
 	}
 	
@@ -268,7 +324,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				Logging.logError(logger, e);
 			}
 		} else {
-			System.out.println(p.toJson());
+			System.out.println(p.getPlatform() + ": " + p.getName());
 		}
 	}
 	
@@ -405,6 +461,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			parser.registerParameter(logDirFlag);
 			parser.registerParameter(threadFlag);
 			parser.registerParameter(helpSwitch);
+			OptionFactory.registerDatabaseOptions(parser);
 			
 		} catch (JSAPException e) {
 			Logging.log(logger, Level.ERROR, e);

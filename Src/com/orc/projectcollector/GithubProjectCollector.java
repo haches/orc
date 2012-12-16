@@ -29,8 +29,8 @@ public class GithubProjectCollector extends ProjectCollector {
 	public void collect(IProjectObserver receiver) {
 		String[] kinds = new String[] {"updated", "most_watched"};
 		for(String k : kinds) {
-			HashSet<String> urls = urls(language, k);
-			for(Document d : domsFromUrls(urls)) {
+			HashSet<String> urls = urls(language, k);			
+			for(Document d : domsFromUrls(urls)) {				
 				collectFromDocument(d, receiver);
 			}
 		}
@@ -40,13 +40,13 @@ public class GithubProjectCollector extends ProjectCollector {
 	public void collectFromDocument(Document doc, IProjectObserver receiver) {
 		LinkedList<ProjectDescription> projects = new LinkedList<ProjectDescription>();
 		String urlPrefix = "https://github.com";
-		Elements rows = doc.select("table.repo tr");		
-		for(Element r : rows) {
+		Elements rows = doc.select("table.repo tr");
+		for(Element r : rows) {			
 			Elements title = r.select("td.title a");
 			if(title.size()>0) {
 				String url = urlPrefix + title.get(0).attr("href");
 				String name = title.get(0).text();
-				ProjectDescription prj = new ProjectDescription(getPlatformName(), name, url);
+				ProjectDescription prj = new ProjectDescription(getPlatformName(), name, url, language);
 				
 				Element despRow = r.nextElementSibling();
 				Elements despTds = despRow.select("td.desc");

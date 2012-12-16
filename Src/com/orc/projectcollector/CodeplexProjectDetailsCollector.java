@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.gson.Gson;
 import com.orc.utilities.DownloadUtilities;
 
 public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
@@ -13,20 +14,32 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 		this.logger = logger; 
 	}
 	
+	private String getFollowUrl(String prjName) {
+		String result = "http://" + prjName + ".codeplex.com/site/api/projects/" + prjName + "/followProject";
+		return result;
+	}
+	
+	class FollowInfo {
+		public int TotalFollowers;
+		public boolean IsFollowing;
+	}
+	
 	@Override
 	public void collect(ProjectDescription prj, Document doc) {
 		
-		// Get the number of followers of the project. 
+		// Get the number of followers of the project.
 		int follows = 0;
-		Elements followLinks = doc.select("div#favoriteProjectContainer > p.subtab_right > a");
-		if(followLinks.size()>0) {
-			String s = followLinks.get(0).text();
-			s = s.substring(0, s.indexOf(' ')).trim();
-			follows = Integer.valueOf(s);			
+		String followUrl = getFollowUrl(prj.getName());		
+		String followContent =  DownloadUtilities.contentFromUrl(followUrl, "utf8", logger);		
+		if(followContent!=null) {
+			Gson gson = new Gson();
+			FollowInfo f = gson.fromJson(followContent, FollowInfo.class);
+			follows = f.TotalFollowers;
 		}
 		
+		
 		// Get project name.
-		Elements nameLinks = doc.select("a#ctl00_ctl00_MasterContent_Tabs_sourceTab");
+		Elements nameLinks = doc.select("a#sourceTab");
 		String name = "";
 		String sourcePage = "";
 		if(nameLinks.size() > 0) {			
@@ -34,54 +47,55 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 			name = sourcePage.substring(7, sourcePage.indexOf(".codeplex.com/"));
 		}
 		
-		Document sourceDom = DownloadUtilities.urlDocument(sourcePage, logger).get(sourcePage);;
-		String vcType = "";
-		String vcLink = "";
-		
-		// Check for subversion repository.
-		if(sourceDom!=null) {
-			Elements divs = sourceDom.select("div#SourceConnectInfoPanel div.modal_info div");		
-			for(Element d : divs) {
-				String text = d.text();
-				if(text.contains("Subversion URL:")) {
-					vcType = VersionControlNames.Subversion;
-					vcLink = d.select("b").text();
-					break;
+		if(sourcePage.length() > 0) {
+			Document sourceDom = DownloadUtilities.urlDocument(sourcePage, logger).get(sourcePage);;
+			String vcType = "";
+			String vcLink = "";
+			
+			// Check for subversion repository.
+			if(sourceDom!=null) {
+				Elements divs = sourceDom.select("input#connecttext2");		
+				for(Element d : divs) {
+					String text = d.val();
+					if(text.endsWith("svn")) {
+						vcType = VersionControlNames.Subversion;
+						vcLink = text;
+						break;
+					}
 				}
 			}
-		}
-		
-		// Check for mercurial repository.
-		if(sourceDom!=null && vcLink.length()==0) {
-			Elements divs = sourceDom.select("div#MercurialInfoPanel div.modal_info div");
-			for(Element d : divs) {
-				String text = d.text();
-				if(text.contains("Clone URL:")) {
-					vcType = VersionControlNames.Mercurial;
-					vcLink = d.select("b").text();
-					break;
+			
+			// Check for mercurial repository.
+			if(sourceDom!=null && vcLink.length()==0) {
+				Elements divs = sourceDom.select("input#clonetext1");
+				for(Element d : divs) {
+					String text = d.val();
+					if(text.startsWith("https://hg")) {
+						vcType = VersionControlNames.Mercurial;
+						vcLink = text;
+						break;
+					}
 				}
 			}
-		}
-		
-		// Check for git repository.
-		if(sourceDom!=null && vcLink.length()==0) {
-			Elements divs = sourceDom.select("div#GitInfoPanel div.modal_info div");
-			for(Element d : divs) {
-				String text = d.text();
-				if(text.contains("Clone URL:")) {
-					vcType = VersionControlNames.Git;
-					vcLink = d.select("b").text();
-					break;
+			
+			// Check for git repository.
+			if(sourceDom!=null && vcLink.length()==0) {
+				Elements divs = sourceDom.select("input#clonetext1");
+				for(Element d : divs) {
+					String text = d.val();
+					if(text.startsWith("https://git")) {
+						vcType = VersionControlNames.Git;
+						vcLink = text;
+						break;
+					}
 				}
 			}
-		}
-		
-		if(vcLink.length()>0 && name.length() > 0) {
-			prj.setVersionControlType(vcType);
-			prj.setSourceLink(vcLink);
-			prj.setFollow(follows);
-		}
+			if(vcLink.length()>0 && name.length() > 0) {
+				prj.setVersionControlType(vcType);
+				prj.setSourceLink(vcLink);
+				prj.setFollow(follows);
+			}			
+		}		
 	}
 
 	@Override

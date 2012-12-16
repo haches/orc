@@ -70,7 +70,7 @@ public class CodeplexProjectCollector extends ProjectCollector {
 				}
 			}
 			
-			ProjectDescription prj = new ProjectDescription(getPlatformName(), name, link);
+			ProjectDescription prj = new ProjectDescription(getPlatformName(), name, link, language);
 			prj.setLiteralName(literalName);
 			prj.setDescription(description);
 			prj.setLabels(labels);

@@ -9,7 +9,7 @@ import com.google.gson.Gson;
  */
 public class ProjectDescription {
 	
-	public ProjectDescription(String platform, String name, String link) {
+	public ProjectDescription(String platform, String name, String link, String language) {
 		setPlatform(platform);
 		setName(name);
 		setHomepage(link);
@@ -19,6 +19,7 @@ public class ProjectDescription {
 		setVersionControlType("");
 		setSourceLink("");
 		setSignature(platform + "." + name);
+		setLanguage(language);
 	}
 		
 	@Override
@@ -72,6 +73,19 @@ public class ProjectDescription {
 	
 	public HashSet<String> getLabels() {
 		return labels;
+	}
+	
+	public String getLabelsAsString() {
+		StringBuilder sb = new StringBuilder();
+		if(labels!=null) {
+			for(String lbl : labels) {
+				if(sb.length()>0) {
+					sb.append(", ");
+				}
+				sb.append(lbl);
+			}
+		}
+		return sb.toString();
 	}
 
 	public void setLabels(HashSet<String> labels) {
@@ -165,6 +179,14 @@ public class ProjectDescription {
 	public void setVersionControlType(String versionControlType) {
 		this.versionControlType = versionControlType;
 	}
+	
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}	
 
 	/**
 	 * Name of the project, this is the name of the project repository.
@@ -230,4 +252,10 @@ public class ProjectDescription {
 	 * Version control type, such as git, subversion and mercurial.
 	 */
 	private String versionControlType;	
+	
+	/**
+	 * Programming language
+	 */
+	private String language;
+
 }

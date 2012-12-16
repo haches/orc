@@ -1,6 +1,12 @@
 package com.orc.utilities;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -102,6 +108,82 @@ public class DownloadUtilities {
 		
 		return result;
 	}
+	
+	/**
+	 * Download url and return its content. If there is an exception, wait for
+	 * waitMilliseconds and try again. Will retry maximal tryTimes number of
+	 * times, if none of the download tries succeeded, return null.
+	 * @param url The url whose content is to be downloaded.
+	 * @param characterSet The character set to which the content should be converted.
+	 * @return Content from the given url, or null if exception happened and none of the retries succeeded..
+	 */
+	public static String contentFromUrl(String url, String characterSet, Logger logger) {
+		boolean done = false;
+		int tries = 0;
+		while (!done) {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			retrieveContentFromUrl(url, bout, logger);
+			try {
+				if (characterSet == null) {
+					return bout.toString();
+				} else {
+					return bout.toString(characterSet);
+				}
+			} catch (Exception e) {
+				if (tries > 3) {
+					done = true;
+				}
+				try {
+					Thread.sleep(10*1000);
+				} catch (Exception ie) {
+					Logging.logError(logger, url, e);
+				}
+			}
+			tries++;
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieve content from url and store it in out.
+	 * 
+	 * @param url
+	 *            The URL from which content is to be retrieved.
+	 * @param out
+	 *            The output stream for the retrieved content.
+	 */
+	public static void retrieveContentFromUrl(String url, OutputStream out, Logger logger) {
+		URL url_;
+		URLConnection con;
+		InputStream is = null;
+		BufferedOutputStream os = null;
+		byte[] buf;
+		int size = 1024 * 500;
+		int byteRead;
+
+		try {
+			url_ = new URL(url);
+			con = url_.openConnection();
+			con.setReadTimeout(60 * 1000);
+			is = con.getInputStream();
+			buf = new byte[size];
+			os = new BufferedOutputStream(out);
+			while ((byteRead = is.read(buf)) != -1) {
+				os.write(buf, 0, byteRead);
+			}
+			os.flush();
+		} catch (Exception e) {
+			Logging.logError(logger, url, e);
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (Exception e) {
+				Logging.logError(logger, url, e);
+			}
+		}
+	}          
 	
 	/**
 	 * Download and parse the HTML page at url.

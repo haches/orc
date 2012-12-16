@@ -21,7 +21,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 	@Test	
 	public void testCollectGitProject() {
 		CodeplexProjectDetailsCollector c = new CodeplexProjectDetailsCollector(null);
-		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "inputsimulator", "https://github.com/cstrahan/inputsimulator");
+		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "inputsimulator", "https://github.com/cstrahan/inputsimulator", "csharp");
 		java.net.URL f = this.getClass().getResource("html/codeplex_inputsimulator_homepage.htm");
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
@@ -33,7 +33,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 	@Test
 	public void testCollectMercurialProject() {
 		CodeplexProjectDetailsCollector c = new CodeplexProjectDetailsCollector(null);
-		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "ajaxcontroltoolkit", "http://ajaxcontroltoolkit.codeplex.com/");
+		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "ajaxcontroltoolkit", "http://ajaxcontroltoolkit.codeplex.com/", "csharp");
 		java.net.URL f = this.getClass().getResource("html/codeplex_ajaxcontroltoolkit_homepage.htm");
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
@@ -44,7 +44,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 	
 	public void testCollectSubversionProject() {
 		CodeplexProjectDetailsCollector c = new CodeplexProjectDetailsCollector(null);
-		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "cosmos", "http://cosmos.codeplex.com/");
+		ProjectDescription prj = new ProjectDescription(PlatformNames.CodePlex, "cosmos", "http://cosmos.codeplex.com/", "csharp");
 		java.net.URL f = this.getClass().getResource("html/codeplex_cosmos_homepage.htm");
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
