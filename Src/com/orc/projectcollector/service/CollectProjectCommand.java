@@ -290,6 +290,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				String[] row = {
 						p.getPlatform(),
 						p.getName(),
+						p.getOwner(),
 						p.getLanguage(),
 						p.getDescription(),
 						p.getVersionControlType(),
@@ -324,7 +325,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				Logging.logError(logger, e);
 			}
 		} else {
-			System.out.println(p.getPlatform() + ": " + p.getName());
+			//System.out.println(p.getPlatform() + ": " + p.getName());
 		}
 	}
 	

@@ -20,6 +20,7 @@ public class ProjectDescription {
 		setSourceLink("");
 		setSignature(platform + "." + name);
 		setLanguage(language);
+		setOwner("");
 	}
 		
 	@Override
@@ -186,6 +187,14 @@ public class ProjectDescription {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}	
 
 	/**
@@ -257,5 +266,10 @@ public class ProjectDescription {
 	 * Programming language
 	 */
 	private String language;
+	
+	/**
+	 * Project owner
+	 */
+	private String owner;
 
 }
