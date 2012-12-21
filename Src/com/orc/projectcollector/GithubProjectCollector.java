@@ -75,6 +75,8 @@ public class GithubProjectCollector extends ProjectCollector {
 				prj.setSourceLink("https://github.com/" + pOwner + "/" + pName + ".git");
 				prj.setDescription(pDescription);
 				prj.setCreatedDate(pDate);
+				prj.setOwner(pOwner);
+				prj.setName(pOwner + "/" + pName);
 				projects.add(prj);
 				if(projects.size()>10000) {
 					receiver.receive(projects);

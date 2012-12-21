@@ -304,7 +304,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 					"page_views",
 					"downloads",
 					"contributors",
-					"timestamp"
+					"timestamp",
+					"source_updated_date"
 				}, 
 				CommitMode.InsertOrElseUpdate, con, logger);
 			String now = DateUtil.getNowDate();
@@ -332,7 +333,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 						String.valueOf(p.getPageViews()),
 						String.valueOf(p.getDownloads()),
 						String.valueOf(p.getContributors()),
-						now
+						now,
+						null
 					};
 				tbl.addRow(row);
 			}
