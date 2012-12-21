@@ -205,8 +205,9 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 	 * results in collectedProjects.
 	 * @param config The parsed command line options.
 	 */
-	private void collectProjects(JSAPResult config) {
+	private void collectProjects(JSAPResult config) {		
 		for(ProjectCollector c : getProjectCollectors(config)) {
+			c.setMinCommits(config.getInt(SC.minCommitsVar));
 			c.collect(this);
 		}		
 	}
@@ -283,13 +284,39 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 	private void storeProject(LinkedList<ProjectDescription> projects) {
 		if(con!=null) {
 			DataManager dm = DataManager.getInstance();
-			DataTable tbl = DataManagerUtility.newDataTable("osprojects", "projects", CommitMode.InsertOrElseUpdate, con, logger);
+			DataTable tbl = DataManagerUtility.newDataTable("osprojects", "projects", 
+				new String[] {
+					"platform",
+					"name",
+					"project_name",
+					"owner",
+					"language",
+					"description",
+					"version_control",
+					"source_link",
+					"homepage",
+					"follows",
+					"star",
+					"fork",
+					"labels",
+					"created_date",
+					"license",
+					"page_views",
+					"downloads",
+					"contributors",
+					"timestamp"
+				}, 
+				CommitMode.InsertOrElseUpdate, con, logger);
 			String now = DateUtil.getNowDate();
 			
 			for(ProjectDescription p : projects) {
+				if(p.getSourceLink().length()==0) {
+					continue;
+				}
 				String[] row = {
 						p.getPlatform(),
 						p.getName(),
+						p.getProjectName(),
 						p.getOwner(),
 						p.getLanguage(),
 						p.getDescription(),
@@ -300,6 +327,11 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 						String.valueOf(p.getStar()),
 						String.valueOf(p.getFork()),
 						p.getLabelsAsString(),
+						DateUtil.dashStringFromDate(p.getCreatedDate()),
+						p.getLicense(),
+						String.valueOf(p.getPageViews()),
+						String.valueOf(p.getDownloads()),
+						String.valueOf(p.getContributors()),
 						now
 					};
 				tbl.addRow(row);
@@ -308,6 +340,9 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 		}
 		
 		for(ProjectDescription p : projects) {
+			if(p.getSourceLink().length()==0) {
+				continue;
+			}
 			storeProject(p);
 		}
 	}
@@ -451,6 +486,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			.setLongFlag(SC.outputOption)
 			.setRequired(false);
 		outputFlag.setHelp(SC.outputMessage);
+		
+		FlaggedOption minCommitsOpt = OptionFactory.flaggedIntOption(SC.minCommitsOption, SC.minCommitsVar, 100, SC.minCommitsMessage, true);
 				
 		JSAP parser = new JSAP();
 		try {
@@ -462,8 +499,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			parser.registerParameter(logDirFlag);
 			parser.registerParameter(threadFlag);
 			parser.registerParameter(helpSwitch);
-			OptionFactory.registerDatabaseOptions(parser);
-			
+			parser.registerParameter(minCommitsOpt);
+			OptionFactory.registerDatabaseOptions(parser);			
 		} catch (JSAPException e) {
 			Logging.log(logger, Level.ERROR, e);
 		}

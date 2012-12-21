@@ -3,6 +3,7 @@ package com.orc.projectcollector;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -58,15 +59,52 @@ public class CodeplexProjectCollector extends ProjectCollector {
 				description = desps.get(0).text();
 			}
 
-			// Collect labels.
+			// Collect labels and metrics
+			int pageViews = 0;
+			int downloads = 0;
+			int contributors = 0;
+			Calendar createdDate = Calendar.getInstance();
+			
 			HashSet<String> labels = new HashSet<String>();
 			Elements paras = row.select("p.search_info");
 			for(Element p : paras) {
 				if(p.text().startsWith("Tags:")) {
+					// Collect labels.
 					Elements links = p.select("a");
 					for(Element l : links) {
 						labels.add(l.text());
 					}
+				} else if(p.text().contains("Page Views:")) {
+					// Collect metrics
+					int j = 0;
+					
+					for(Element e : p.select("span")) {
+						if(j==0) {
+							pageViews = Integer.valueOf(e.text());							
+						} else if(j==1) {
+							downloads = Integer.valueOf(e.text());
+						} else if(j==2) {
+							if(e.hasAttr("localtimeticks")) {
+								long ticks = Integer.valueOf(e.attr("localtimeticks"));
+								Calendar c = Calendar.getInstance();
+								c.setTimeInMillis(ticks*1000);
+								createdDate = c;						
+							}
+						}
+						j++;
+					}
+				}
+				
+			}
+					
+			// Collect license.
+			String license = "";
+			for(Element e : row.select("a")) {
+				if(e.attr("href").endsWith("license")) {
+					license = e.text();
+					break;
+				} else if(e.attr("href").endsWith("team/view")) {
+					contributors = Integer.valueOf(e.text());
 				}
 			}
 			
@@ -74,7 +112,12 @@ public class CodeplexProjectCollector extends ProjectCollector {
 			prj.setLiteralName(literalName);
 			prj.setDescription(description);
 			prj.setLabels(labels);
-			prjs.add(prj);			
+			prj.setLicense(license);
+			prj.setPageViews(pageViews);
+			prj.setDownloads(downloads);
+			prj.setContributors(contributors);
+			prj.setCreatedDate(createdDate);
+			prjs.add(prj);						
 		}
 		receiver.receive(prjs);
 	}

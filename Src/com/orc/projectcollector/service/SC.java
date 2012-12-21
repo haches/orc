@@ -14,6 +14,7 @@ public class SC {
 	static public String helpOption = "help";
 	static public String projectOption = "project"; 
 	static public String outputOption = "output";
+	static public String minCommitsOption = "min-commits";
 	
 	/* Command option variables */
 	static public String helpVar = "help";
@@ -24,6 +25,7 @@ public class SC {
 	static public String fileVar = "file";
 	static public String logDirVar = "logDir";
 	static public String outputVar = "output";
+	static public String minCommitsVar = "MIN_COMMITS"; 
 	
 	/* Command descriptions */
 	static public String collectProjectDescription = "Collect project information (such as name, source repository link) from multiple platforms, such as Github, CodePlex. This command goes to project hosting platforms and scrape the most recently updated projects from the specified hosting platforms. At a point of time, only part of the project can be detected and collected; so this command should be executed frequently to collect as many projects as possible. The collected data is printed to the standard output in JSON format. Each line is a JSON object representing a single project.\n";	
@@ -37,4 +39,5 @@ public class SC {
 	static public String projectFileMessage = "Specify the path to the file storing project descriptions (in JSON format). Only these projects need to have their repository links retrieved.";
 	static public String logDirectoryMessage = "Specify the directory for storing log files. If not specified, the system's temporary directory will be used.";
 	static public String outputMessage = "Specify the file to store all outputs. If not specified, output will be printed to standard output.";
+	static public String minCommitsMessage = "Specify the minimum number of commits of a project in order to have that project downloaded. Only have effect if the platform is Github. Default: 100.";
 }

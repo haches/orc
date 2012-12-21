@@ -1,7 +1,7 @@
 package com.orc.projectcollector;
 
+import java.util.Calendar;
 import java.util.HashSet;
-
 import com.google.gson.Gson;
 
 /**
@@ -21,6 +21,12 @@ public class ProjectDescription {
 		setSignature(platform + "." + name);
 		setLanguage(language);
 		setOwner("");
+		setCreatedDate(Calendar.getInstance());
+		setProjectName(name);
+		setLicense("");
+		setContributors(0);
+		setPageViews(0);
+		setDownloads(0);
 	}
 		
 	@Override
@@ -195,6 +201,54 @@ public class ProjectDescription {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+	
+	public Calendar getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Calendar createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}	
+	
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}	
+	
+	public int getPageViews() {
+		return pageViews;
+	}
+
+	public void setPageViews(int pageViews) {
+		this.pageViews = pageViews;
+	}
+
+	public int getDownloads() {
+		return downloads;
+	}
+
+	public void setDownloads(int downloads) {
+		this.downloads = downloads;
+	}
+
+	public int getContributors() {
+		return contributors;
+	}
+
+	public void setContributors(int contributors) {
+		this.contributors = contributors;
 	}	
 
 	/**
@@ -271,5 +325,35 @@ public class ProjectDescription {
 	 * Project owner
 	 */
 	private String owner;
+	
+	/**
+	 * Date of the project creation
+	 */
+	private Calendar createdDate;
+	
+	/**
+	 * Name of the project
+	 */
+	private String projectName;
+	
+	/**
+	 * Project license
+	 */
+	private String license;
+	
+	/**
+	 * Page views.
+	 */
+	private int pageViews;
+	
+	/**
+	 * Downloads
+	 */
+	private int downloads;
+	
+	/**
+	 * Contributors
+	 */
+	private int contributors;
 
 }

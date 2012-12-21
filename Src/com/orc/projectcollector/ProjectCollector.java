@@ -34,6 +34,11 @@ abstract public class ProjectCollector {
 	 * The maximum number of thread used for parallel downloading
 	 */
 	private int maxThreads = 20;
+	
+	/**
+	 * The minimum number of commits a project should have in order for it to be downloaded
+	 */
+	private int minCommits;
 		
 	public int getMaxThreads() {
 		return maxThreads;
@@ -41,6 +46,14 @@ abstract public class ProjectCollector {
 
 	public void setMaxThreads(int maxThreads) {
 		this.maxThreads = maxThreads;
+	}
+	
+	public int getMinCommits() {
+		return minCommits;
+	}
+
+	public void setMinCommits(int minCommits) {
+		this.minCommits = minCommits;
 	}
 
 	/**
