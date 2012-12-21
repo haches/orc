@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,34 +49,9 @@ import com.orc.projectcollector.ProjectDetailsCollector;
 import com.orc.utilities.Logging;
 
 public class CollectProjectCommand extends PlatformCommand implements IProjectObserver{
-		
-	/**
-	 * If the log-directory option is specified, the returned file will be in that directory;
-	 * otherwise, use system temporary directory.
-	 * @return Full path of log file. 
-	 */
-	static String logFilePath(String logDir) {
-		String directory;
-		String logPrefix = "collect_project_";
-		if(logDir==null) {
-			directory = System.getProperty("java.io.tmpdir");
-		} else {
-			directory = logDir;
-		}
-
-		Calendar now = Calendar.getInstance();
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy_MMM_dd_HH_mm_ss"); 
-		String dateNow = formatter.format(now.getTime());
-		return directory + File.separator + logPrefix + "_" + dateNow + ".log";
-	}
-	
+			
 	public CollectProjectCommand() {
 	}
-	
-	/**
-	 * Logger
-	 */
-	private Logger logger;
 	
 	/**
 	 * Create specific project detailed information collector for given platform 
@@ -121,7 +95,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				config.getInt(OptionFactory.portVar));
 		return result;
 	}	
-		
+			
 	@Override
 	public void execute(String[] args) {
 		assert(isExectuable(args));
@@ -129,11 +103,9 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 		if(config.success() && !config.getBoolean(SC.helpVar)) {			
 			try {
 				// Setup logger.
-				String logFile = logFilePath(config.contains(SC.logDirVar) ? config.getString(SC.logDirVar) : null);
-				logger = Logger.getLogger("project-collector");				
-				org.apache.log4j.FileAppender appender = new FileAppender(new SimpleLayout(), logFile);
-				logger.addAppender(appender);
+				setupLogger(config);
 				
+				// Setup database.
 				if(config.contains(OptionFactory.schemaVar)) {
 					con = getConnection(config);
 				}

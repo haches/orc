@@ -1,6 +1,15 @@
 package com.orc.projectcollector.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
@@ -76,4 +85,48 @@ abstract public class PlatformCommand {
 		}
 		return config;
 	}	
+	
+	
+	/**
+	 * Logger
+	 */
+	protected Logger logger;	
+	
+	protected void setupLogger(JSAPResult c) {
+		String logFile = logFilePath(c.contains(SC.logDirVar) ? c.getString(SC.logDirVar) : null);
+		logger = Logger.getLogger("project-collector");				
+		Appender appender;
+		try {
+			if(c.contains(SC.logDirVar)) {
+				appender = new FileAppender(new SimpleLayout(), logFile);
+			} else {
+				appender = new ConsoleAppender(new SimpleLayout());
+			}			
+			
+			logger.addAppender(appender);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}				
+	}
+	
+	/**
+	 * If the log-directory option is specified, the returned file will be in that directory;
+	 * otherwise, use system temporary directory.
+	 * @return Full path of log file. 
+	 */
+	static String logFilePath(String logDir) {
+		String directory;
+		String logPrefix = "collect_project_";
+		if(logDir==null) {
+			directory = System.getProperty("java.io.tmpdir");
+		} else {
+			directory = logDir;
+		}
+
+		Calendar now = Calendar.getInstance();
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy_MMM_dd_HH_mm_ss"); 
+		String dateNow = formatter.format(now.getTime());
+		return directory + File.separator + logPrefix + "_" + dateNow + ".log";
+	}
+	
 }

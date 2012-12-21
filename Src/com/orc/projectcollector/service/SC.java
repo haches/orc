@@ -4,6 +4,7 @@ public class SC {
 	
 	/* Command names */
 	static public String collectProject = "collect-project";
+	static public String downloadProject = "download-project";
 	
 	/* Command option names */
 	static public String languageOption = "language";
@@ -14,21 +15,34 @@ public class SC {
 	static public String helpOption = "help";
 	static public String projectOption = "project"; 
 	static public String outputOption = "output";
-	static public String minCommitsOption = "min-commits";
+	static public String minCommitsOption = "min-commits";	
+	
+	static public String urlOption = "url";
+	static public String createDateOption = "create-date";
+	static public String folderOption = "folder";
+	static public String projetNameOption ="project";
+	static public String versionControlOption = "version-control";
 	
 	/* Command option variables */
 	static public String helpVar = "help";
-	static public String languageVar = "language";
-	static public String platformVar = "platform";
-	static public String repositoryVar = "repository";
-	static public String threadVar = "thread";	
-	static public String fileVar = "file";
-	static public String logDirVar = "logDir";
-	static public String outputVar = "output";
-	static public String minCommitsVar = "MIN_COMMITS"; 
+	static public String languageVar = "LANGUAGE";
+	static public String platformVar = "PLATFORM";
+	static public String repositoryVar = "REPOSITORY";
+	static public String threadVar = "THREAD";	
+	static public String fileVar = "FILE";
+	static public String logDirVar = "LOG_DIR";
+	static public String outputVar = "OUTPUT";
+	static public String minCommitsVar = "MIN_COMMITS";	
+	
+	static public String urlVar = "URL_VAR";
+	static public String createDateVar = "CREATE_DATE";
+	static public String folderVar = "FOLDER";
+	static public String projectNameVar = "PROJECT_NAME";
+	static public String versionControlVar = "VERSION_CONTROL";
 	
 	/* Command descriptions */
-	static public String collectProjectDescription = "Collect project information (such as name, source repository link) from multiple platforms, such as Github, CodePlex. This command goes to project hosting platforms and scrape the most recently updated projects from the specified hosting platforms. At a point of time, only part of the project can be detected and collected; so this command should be executed frequently to collect as many projects as possible. The collected data is printed to the standard output in JSON format. Each line is a JSON object representing a single project.\n";	
+	static public String collectProjectDescription = "Collect project information (such as name, source repository link) from multiple platforms, such as Github, CodePlex. This command goes to project hosting platforms and scrape the most recently updated projects from the specified hosting platforms. At a point of time, only part of the project can be detected and collected; so this command should be executed frequently to collect as many projects as possible. The collected data is printed to the standard output in JSON format. Each line is a JSON object representing a single project.\n";
+	static public String downloadProjectDescription = "Download project source code or update project source code if the project has already been downloaded.";
 	
 	/* Help messages */
 	static public String collectRepositoryMessage = "Should the link to project repositories be collected? It takes more time to collect this information. Default: false.";
@@ -40,4 +54,11 @@ public class SC {
 	static public String logDirectoryMessage = "Specify the directory for storing log files. If not specified, the system's temporary directory will be used.";
 	static public String outputMessage = "Specify the file to store all outputs. If not specified, output will be printed to standard output.";
 	static public String minCommitsMessage = "Specify the minimum number of commits of a project in order to have that project downloaded. Only have effect if the platform is Github. Default: 100.";
+	
+	static public String urlOptionMessage = "Specify the check-out url of the project.";
+	static public String createDateOptionMessage = "Specify the creation date of the project. Format: YYYY-MM-DD.";
+	static public String projectNameOptionMessage = "Specify the name of the project to be downloaded.";
+	static public String folderOptionMessage = "Specify the base folder to store the project. The downloaded project is stored at FOLDER/PLATFORM/CREATE_DATE/PROJECT_NAME";
+	static public String platformMessage2 = "The platforms from which projects are collected. Format: a single platform name. Supported platforms: github, codeplex.";
+	static public String versionControlMessage = "Specify the version control system for the project. Supported values: git, svn, mercurial.";
 }
