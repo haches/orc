@@ -2,6 +2,7 @@ package com.orc.projectcollector.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -11,6 +12,8 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
+import com.javautilities.database.DbUtil;
+import com.javautilities.jsap.commandline.OptionFactory;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 
@@ -129,4 +132,35 @@ abstract public class PlatformCommand {
 		return directory + File.separator + logPrefix + "_" + dateNow + ".log";
 	}
 	
+	/**
+	 * Get database connection from command line arguments.
+	 * @param config
+	 * @return
+	 */
+	protected Connection getConnection(JSAPResult config) {
+		Connection result = DbUtil.getConnection(
+				config.getString(OptionFactory.hostVar), 
+				config.getString(OptionFactory.schemaVar), 
+				"UTF-8", 
+				config.getString(OptionFactory.userVar),
+				config.getString(OptionFactory.passwordVar),
+				config.getInt(OptionFactory.portVar));
+		return result;
+	}		
+	
+	/**
+	 * Get operating system dependent command line.
+	 * @param cmd
+	 * @return
+	 */
+	protected String[] getCommand(String cmd) {
+		String os = System.getProperty("os.name").toLowerCase();
+		String[] command = null; 
+		if(os.indexOf("win")>=0) {
+			command = new String[] {"CMD", "/C", cmd};
+		} else {
+			command = new String[] {"/bin/bash", "-c", cmd};
+		}
+		return command;
+	}
 }

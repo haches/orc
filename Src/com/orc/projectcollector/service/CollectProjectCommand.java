@@ -84,18 +84,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 	private BufferedWriter outputWriter;
 	
 	private Connection con;
-	
-	protected Connection getConnection(JSAPResult config) {
-		Connection result = DbUtil.getConnection(
-				config.getString(OptionFactory.hostVar), 
-				config.getString(OptionFactory.schemaVar), 
-				"UTF-8", 
-				config.getString(OptionFactory.userVar),
-				config.getString(OptionFactory.passwordVar),
-				config.getInt(OptionFactory.portVar));
-		return result;
-	}	
-			
+				
 	@Override
 	public void execute(String[] args) {
 		assert(isExectuable(args));
@@ -276,8 +265,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 					"page_views",
 					"downloads",
 					"contributors",
-					"timestamp",
-					"source_updated_date"
+					"timestamp"
 				}, 
 				CommitMode.InsertOrElseUpdate, con, logger);
 			String now = DateUtil.getNowDate();
@@ -305,8 +293,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 						String.valueOf(p.getPageViews()),
 						String.valueOf(p.getDownloads()),
 						String.valueOf(p.getContributors()),
-						now,
-						null
+						now
 					};
 				tbl.addRow(row);
 			}

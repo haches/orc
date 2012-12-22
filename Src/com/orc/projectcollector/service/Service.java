@@ -38,7 +38,8 @@ public class Service {
 	private List<PlatformCommand> getAllCommands() {
 		LinkedList<PlatformCommand> result = new LinkedList<PlatformCommand>();
 		result.add(new CollectProjectCommand());
-		result.add(new DownloadPRojectCommand());
+		result.add(new DownloadProjectCommand());
+		result.add(new ProjectDownloadManagementCommand());
 		return result;
 	}
 

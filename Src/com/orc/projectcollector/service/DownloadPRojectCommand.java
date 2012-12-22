@@ -15,8 +15,9 @@ import com.martiansoftware.jsap.Switch;
 import com.mysql.jdbc.log.LogUtils;
 import com.orc.projectcollector.PlatformNames;
 import com.orc.utilities.Logging;
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting;
 
-public class DownloadPRojectCommand extends PlatformCommand {
+public class DownloadProjectCommand extends PlatformCommand {
 
 	@Override
 	public String getName() {
@@ -30,7 +31,8 @@ public class DownloadPRojectCommand extends PlatformCommand {
 
 	@Override
 	public void execute(String[] args) {
-		JSAPResult config = parseCommandLine(args);		
+		JSAPResult config = parseCommandLine(args);
+		setupLogger(config);
 		if(config.success() && !config.getBoolean(SC.helpVar)) {
 			String projectName = config.getString(SC.projectNameVar);
 			String platform = config.getString(SC.platformVar);
@@ -52,22 +54,15 @@ public class DownloadPRojectCommand extends PlatformCommand {
 			
 			String cmd = getCheckoutCommand(versionControl, url, isNew);			
 			try {
-				String os = System.getProperty("os.name").toLowerCase();
-				String[] command = null; 
-				if(os.indexOf("win")>=0) {
-					command = new String[] {"CMD", "/C", cmd};
-				} else {					
-				}
-				
+				String[] command = getCommand(cmd); 								
 		        ProcessBuilder probuilder = new ProcessBuilder(command);
 		        probuilder.directory(new File(folder));		        
 		        Process process = probuilder.start();
 		        process.waitFor();
 			} catch (IOException e) {
-				e.printStackTrace();
 				LogUtil.logError(logger, e);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LogUtil.logError(logger, e);
 			}
 		}		
 	}
@@ -79,12 +74,22 @@ public class DownloadPRojectCommand extends PlatformCommand {
 				sb.append("git clone ");
 				sb.append(url);
 				sb.append(" .");
-			} else {
-				
+			} else if(versionControl.equals("svn")) {
+				sb.append("svn checkout ");
+				sb.append(url);
+				sb.append(" .");			
+			} else if(versionControl.equals("mercurial")) {
+				sb.append("hg clone ");
+				sb.append(url);
+				sb.append(" .");				
 			}
 		} else {
 			if(versionControl.equals("git")) {
 				sb.append("git pull");
+			}else if(versionControl.equals("svn")) {
+				sb.append("svn update .");
+			} else if(versionControl.equals("mercurial")) {
+				sb.append("hg pull");
 			}
 		}
 		return sb.toString();
