@@ -114,7 +114,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 					}
 					toBeRemoved.add(prc);
 				} else {
-					if(diff > maxDownloaders) {
+					if(diff > maxDownloadTime) {
 						System.out.println("Terminating.");
 						prc.destroy();
 						try {
