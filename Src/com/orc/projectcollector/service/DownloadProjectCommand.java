@@ -11,11 +11,7 @@ import com.javautilities.logging.LogUtil;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
-import com.mysql.jdbc.log.LogUtils;
 import com.orc.projectcollector.PlatformNames;
-import com.orc.utilities.Logging;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting;
 
 public class DownloadProjectCommand extends PlatformCommand {
 
@@ -30,10 +26,10 @@ public class DownloadProjectCommand extends PlatformCommand {
 	}
 
 	@Override
-	public void execute(String[] args) {
+	public void execute(String[] args) {		
 		JSAPResult config = parseCommandLine(args);
 		setupLogger(config);
-		if(config.success() && !config.getBoolean(SC.helpVar)) {
+		if(config.success() && !config.getBoolean(SC.helpVar)) {			
 			String projectName = config.getString(SC.projectNameVar);
 			String platform = config.getString(SC.platformVar);
 			String url = config.getString(SC.urlVar);
@@ -51,10 +47,10 @@ public class DownloadProjectCommand extends PlatformCommand {
 					LogUtil.logError(logger, e);
 				}
 			}
-			
-			String cmd = getCheckoutCommand(versionControl, url, isNew);			
-			try {
-				String[] command = getCommand(cmd); 								
+			String cmd = getCheckoutCommand(versionControl, url, isNew);
+			try {				
+				
+				String[] command = getCommand(cmd);				
 		        ProcessBuilder probuilder = new ProcessBuilder(command);
 		        probuilder.directory(new File(folder));		        
 		        Process process = probuilder.start();
@@ -74,7 +70,7 @@ public class DownloadProjectCommand extends PlatformCommand {
 				sb.append("git clone ");
 				sb.append(url);
 				sb.append(" .");
-			} else if(versionControl.equals("svn")) {
+			} else if(versionControl.equals("subversion")) {
 				sb.append("svn checkout ");
 				sb.append(url);
 				sb.append(" .");			
@@ -86,7 +82,7 @@ public class DownloadProjectCommand extends PlatformCommand {
 		} else {
 			if(versionControl.equals("git")) {
 				sb.append("git pull");
-			}else if(versionControl.equals("svn")) {
+			}else if(versionControl.equals("subversion")) {
 				sb.append("svn update .");
 			} else if(versionControl.equals("mercurial")) {
 				sb.append("hg pull");

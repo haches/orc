@@ -6,6 +6,6 @@ package com.orc.projectcollector;
  */
 public class VersionControlNames {
 	static public String Git = "git";
-	static public String Subversion = "suvbersion";
+	static public String Subversion = "subversion";
 	static public String Mercurial = "mercurial";
 }

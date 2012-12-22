@@ -151,7 +151,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 		String now = DateUtil.getNowDate();
 		String query = 
 			"SELECT platform, name, created_date, version_control, source_link FROM projects WHERE " + 
-			"language = '" + language + "' AND NOT source_link IS NULL AND " + "version_control='git' AND " +  
+			"language = '" + language + "' AND NOT source_link IS NULL AND " + " created_date IS NOT NULL AND " +  
 	        "(source_updated_date IS NULL OR DATEDIFF(source_updated_date, '" + now + "') > " + String.valueOf(updateFrequency) + ") LIMIT " + String.valueOf(count);
 		
 		
@@ -168,7 +168,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			CommitMode.Update, con, logger);
 		try {
 			while(rs.next()) {
-				String platform = rs.getString(1);
+				String platform = rs.getString(1);				
 				String project = rs.getString(2);
 				String createDate = DateUtil.dashStringFromDate(DateUtil.dateToCalendar((rs.getDate(3))));				
 				String versionControl = rs.getString(4);
@@ -207,7 +207,6 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			" --project " + project + 
 			" --url " + sourceLink + " --create-date " + createDate + 
 			" --folder " + folder + " --version-control " + versionControl;
-		
 		String[] command = getCommand(cmd); 	
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(folder));		        
