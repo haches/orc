@@ -8,6 +8,7 @@ public class PlatformNames {
 	static public String Github = "github";
 	static public String CodePlex = "codeplex";
 	static public String Bitbucket = "bitbucket";
+	static public String Googlecode = "googlecode";
 	
 	/**
 	 * A string with all platforms separated by comma.
@@ -20,6 +21,8 @@ public class PlatformNames {
 		sb.append(CodePlex);
 		sb.append(',');
 		sb.append(Bitbucket);
+		sb.append(',');
+		sb.append(Googlecode);		
 		return sb.toString();
 		
 	}

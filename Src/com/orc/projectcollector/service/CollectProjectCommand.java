@@ -39,6 +39,8 @@ import com.orc.projectcollector.CodeplexProjectCollector;
 import com.orc.projectcollector.CodeplexProjectDetailsCollector;
 import com.orc.projectcollector.GithubProjectCollector;
 import com.orc.projectcollector.GithubProjectDetailsCollector;
+import com.orc.projectcollector.GoogleCodeProjectCollector;
+import com.orc.projectcollector.GoogleCodeProjectDetailsCollector;
 import com.orc.projectcollector.IProjectObserver;
 import com.orc.projectcollector.PlatformNames;
 import com.orc.projectcollector.ProjectCollector;
@@ -63,6 +65,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			return new CodeplexProjectDetailsCollector(logger);
 		} else if(platform.equals(PlatformNames.Bitbucket)) {
 			return new BitbucketProjectDetailsCollector(logger);
+		} else if(platform.equals(PlatformNames.Googlecode)) {
+			return new GoogleCodeProjectDetailsCollector(logger);
 		}
 		return null;
 	}
@@ -271,7 +275,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			String now = DateUtil.getNowDate();
 			
 			for(ProjectDescription p : projects) {
-				if(p.getSourceLink().length()==0) {
+				if(p.getSourceLink()==null || p.getSourceLink().length()==0) {
 					continue;
 				}
 				String[] row = {
@@ -378,6 +382,10 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			if(platforms.contains(PlatformNames.Bitbucket)) {
 				BitbucketProjectCollector bCol = new BitbucketProjectCollector(lan, threadCount, logger);
 				result.add(bCol);
+			}
+			if(platforms.contains(PlatformNames.Googlecode)) {
+				GoogleCodeProjectCollector gCol = new GoogleCodeProjectCollector(lan, threadCount, logger);
+				result.add(gCol);
 			}
 		}
 		return result;
