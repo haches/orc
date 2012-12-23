@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import com.javautilities.database.DbUtil;
 import com.javautilities.date.DateUtil;
 import com.javautilities.logging.LogUtil;
+import com.orc.projectcollector.service.VersionControlNames;
 import com.orc.utilities.Logging;
 
 public class GithubProjectCollector extends ProjectCollector {
@@ -77,7 +78,7 @@ public class GithubProjectCollector extends ProjectCollector {
 				prj.setCreatedDate(pDate);
 				prj.setOwner(pOwner);
 				prj.setName(pOwner + "/" + pName);
-				prj.setVersionControlType("git");
+				prj.setVersionControlType(VersionControlNames.git);
 				projects.add(prj);				
 				if(projects.size()>10000) {
 					receiver.receive(projects);

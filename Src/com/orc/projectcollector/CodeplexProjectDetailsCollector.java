@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.google.gson.Gson;
+import com.orc.projectcollector.service.VersionControlNames;
 import com.orc.utilities.DownloadUtilities;
 
 public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
@@ -70,7 +71,7 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 				for(Element d : divs) {
 					String text = d.val();
 					if(text.endsWith("svn")) {
-						vcType = VersionControlNames.Subversion;
+						vcType = VersionControlNames.subversion;
 						vcLink = text;
 						break;
 					}
@@ -83,7 +84,7 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 				for(Element d : divs) {
 					String text = d.val();
 					if(text.startsWith("https://hg")) {
-						vcType = VersionControlNames.Mercurial;
+						vcType = VersionControlNames.mercurial;
 						vcLink = text;
 						break;
 					}
@@ -96,7 +97,7 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 				for(Element d : divs) {
 					String text = d.val();
 					if(text.startsWith("https://git")) {
-						vcType = VersionControlNames.Git;
+						vcType = VersionControlNames.git;
 						vcLink = text;
 						break;
 					}

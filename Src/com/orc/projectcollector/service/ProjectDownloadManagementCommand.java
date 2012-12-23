@@ -46,7 +46,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 	 */
 	private Connection con;
 	
-	private HashMap<Process, Calendar> downloaders;
+	private LinkedList<ProcessInfo> downloaders;
 
 	@Override
 	public void execute(String[] args) {
@@ -54,7 +54,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 		setupLogger(config);
 		if(config.success() && !config.getBoolean(SC.helpVar)) {
 			con = getConnection(config);
-			downloaders = new HashMap<Process, Calendar>();
+			downloaders = new LinkedList<ProcessInfo>();
 
 			int parallelJobs = config.getInt(SC.parallelVal);
 			int maxDownloadTime = config.getInt(SC.maxDownloadTimeVal);
@@ -71,6 +71,16 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 		}
 	}
 	
+	class ProcessInfo {
+		public ProcessInfo(Process prc, Calendar time) {
+			process = prc;
+			startTime = time;
+		}
+		
+		public Process process;		
+		public Calendar startTime;		
+	}
+	
 	private void performDownloading(int maxDownloaders, int maxDownloadTime, int updateFrequency, String folder, String language, int maxProjects, String downloader, String platform) {
 		int downloadedProjects = 0;
 		while(true) {
@@ -81,7 +91,8 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 					downloadedProjects += processes.size();
 					for(Process p : processes) {
 						Calendar now = Calendar.getInstance();
-						downloaders.put(p, now);
+						ProcessInfo pInfo = new ProcessInfo(p,  now);
+						downloaders.add(pInfo);
 					}					
 				}
 				if(downloaders.size()==0) {
@@ -96,13 +107,14 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 				LogUtil.logError(logger, e);
 			}
 			
-			LinkedList<Process> toBeRemoved = new LinkedList<Process>(); 
-			for(Entry<Process, Calendar> p : downloaders.entrySet()) {
-				Process prc = p.getKey();
-				Calendar startTime = p.getValue();
+			LinkedList<ProcessInfo> kept = new LinkedList<ProcessInfo>(); 
+			for(ProcessInfo pInfo : downloaders) {
+				Process prc = pInfo.process;
+				Calendar startTime = pInfo.startTime;
 				Calendar now = Calendar.getInstance();
 				int diff = (int)(now.getTime().getTime() - startTime.getTime().getTime()) / 1000 / 60;
 				boolean terminated = true;
+				boolean shouldKeep = true;
 				try{
 					int exitValue = prc.exitValue();
 					terminated = true;
@@ -116,7 +128,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 					} catch (InterruptedException e) {
 						LogUtil.logError(logger, e);
 					}
-					toBeRemoved.add(prc);
+					shouldKeep = false;
 				} else {
 					if(diff > maxDownloadTime) {
 						System.out.println("Terminating.");
@@ -126,13 +138,15 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 						} catch (InterruptedException e) {
 							LogUtil.logError(logger, e);
 						}
-						toBeRemoved.add(prc);
+						shouldKeep = false;
 					}					
 				}				
+				if(shouldKeep) {
+					kept.add(pInfo);
+				}
 			}
-			for(Process p : toBeRemoved) {
-				downloaders.remove(p);
-			}			
+			downloaders.clear();
+			downloaders.addAll(kept);
 			
 			SimpleDateFormat df = new SimpleDateFormat("MMM dd,yyyy HH:mm:ss");
 			String nowStr = df.format(new Date());
@@ -192,6 +206,11 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			for(ProcessBuilder b : pBuilders) {
 				try {
 					Process prc = b.start();
+					try {
+						Thread.sleep(1000*2);
+					} catch (InterruptedException e) {
+						LogUtil.logError(logger, e);
+					}
 					result.add(prc);
 				} catch (IOException e) {
 					LogUtil.logError(logger, e);
@@ -210,7 +229,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			" --project " + project + 
 			" --url " + sourceLink + " --create-date " + createDate + 
 			" --folder " + folder + " --version-control " + versionControl;
-		System.out.println(cmd);
+		//System.out.println(cmd);
 		String[] command = getCommand(cmd); 	
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(folder));		        

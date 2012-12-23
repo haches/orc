@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.orc.projectcollector.CodeplexProjectDetailsCollector;
 import com.orc.projectcollector.PlatformNames;
 import com.orc.projectcollector.ProjectDescription;
-import com.orc.projectcollector.VersionControlNames;
+import com.orc.projectcollector.service.VersionControlNames;
 
 import junit.framework.TestCase;
 
@@ -26,7 +26,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
 		
-		assertEquals(VersionControlNames.Git, prj.getVersionControlType());
+		assertEquals(VersionControlNames.git, prj.getVersionControlType());
 		assertEquals("https://git01.codeplex.com/inputsimulator", prj.getSourceLink());		
 	}	
 	
@@ -38,7 +38,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
 		
-		assertEquals(VersionControlNames.Mercurial, prj.getVersionControlType());
+		assertEquals(VersionControlNames.mercurial, prj.getVersionControlType());
 		assertEquals("https://hg.codeplex.com/ajaxcontroltoolkit", prj.getSourceLink());		
 	}
 	
@@ -49,7 +49,7 @@ public class CodeplexProjectDetailsCollectorTest extends TestCase {
 		File html = new File(f.getPath());
 		c.collectFromFile(prj, html.getPath());		
 		
-		assertEquals(VersionControlNames.Subversion, prj.getVersionControlType());
+		assertEquals(VersionControlNames.subversion, prj.getVersionControlType());
 		assertEquals("https://IL2CPU.svn.codeplex.com/svn", prj.getSourceLink());		
 		
 	}

@@ -46,11 +46,16 @@ public class DownloadProjectCommand extends PlatformCommand {
 				} catch (IOException e) {
 					LogUtil.logError(logger, e);
 				}
+			} else {
+				File hiddenFolder = new File(folder + File.separator + VersionControlNames.getFolder(versionControl));
+				if(!hiddenFolder.exists()) {
+					isNew = true;
+				}
 			}
+			
 			String cmd = getCheckoutCommand(versionControl, url, isNew);
 			try {				
-				
-				String[] command = getCommand(cmd);				
+				String[] command = getCommand(cmd);
 		        ProcessBuilder probuilder = new ProcessBuilder(command);
 		        probuilder.directory(new File(folder));		        
 		        Process process = probuilder.start();
@@ -65,27 +70,28 @@ public class DownloadProjectCommand extends PlatformCommand {
 	
 	private String getCheckoutCommand(String versionControl, String url, boolean isNew) {
 		StringBuilder sb = new StringBuilder();
+		String cmdName = VersionControlNames.getCommandName(versionControl);
 		if(isNew) {
-			if(versionControl.equals("git")) {
-				sb.append("git clone ");
+			if(versionControl.equals(VersionControlNames.git)) {
+				sb.append(cmdName  + " clone ");
 				sb.append(url);
 				sb.append(" .");
-			} else if(versionControl.equals("subversion")) {
-				sb.append("svn checkout ");
+			} else if(versionControl.equals(VersionControlNames.subversion)) {
+				sb.append(cmdName + " checkout ");
 				sb.append(url);
 				sb.append(" .");			
-			} else if(versionControl.equals("mercurial")) {
-				sb.append("hg clone ");
+			} else if(versionControl.equals(VersionControlNames.mercurial)) {
+				sb.append(cmdName + " clone ");
 				sb.append(url);
 				sb.append(" .");				
 			}
 		} else {
-			if(versionControl.equals("git")) {
-				sb.append("git pull");
-			}else if(versionControl.equals("subversion")) {
-				sb.append("svn update .");
-			} else if(versionControl.equals("mercurial")) {
-				sb.append("hg pull");
+			if(versionControl.equals(VersionControlNames.git)) {
+				sb.append(cmdName + " pull");
+			}else if(versionControl.equals(VersionControlNames.subversion)) {
+				sb.append(cmdName + " update .");
+			} else if(versionControl.equals(VersionControlNames.mercurial)) {
+				sb.append(cmdName + " pull");
 			}
 		}
 		return sb.toString();
