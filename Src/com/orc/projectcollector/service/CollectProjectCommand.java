@@ -19,13 +19,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.javautilities.database.DbUtil;
 import com.javautilities.database.manager.CommitMode;
 import com.javautilities.database.manager.DataManager;
 import com.javautilities.database.manager.DataManagerUtility;
@@ -37,6 +33,8 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
+import com.orc.projectcollector.BitbucketProjectCollector;
+import com.orc.projectcollector.BitbucketProjectDetailsCollector;
 import com.orc.projectcollector.CodeplexProjectCollector;
 import com.orc.projectcollector.CodeplexProjectDetailsCollector;
 import com.orc.projectcollector.GithubProjectCollector;
@@ -63,6 +61,8 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			return new GithubProjectDetailsCollector(logger);
 		} else if(platform.equals(PlatformNames.CodePlex)) {
 			return new CodeplexProjectDetailsCollector(logger);
+		} else if(platform.equals(PlatformNames.Bitbucket)) {
+			return new BitbucketProjectDetailsCollector(logger);
 		}
 		return null;
 	}
@@ -375,6 +375,10 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 				CodeplexProjectCollector cCol = new CodeplexProjectCollector(lan, threadCount, logger);			
 				result.add(cCol);				
 			}
+			if(platforms.contains(PlatformNames.Bitbucket)) {
+				BitbucketProjectCollector bCol = new BitbucketProjectCollector(lan, threadCount, logger);
+				result.add(bCol);
+			}
 		}
 		return result;
 	}
@@ -448,7 +452,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 			.setRequired(false);
 		outputFlag.setHelp(SC.outputMessage);
 		
-		FlaggedOption minCommitsOpt = OptionFactory.flaggedIntOption(SC.minCommitsOption, SC.minCommitsVar, 100, SC.minCommitsMessage, true);
+		FlaggedOption minCommitsOpt = OptionFactory.flaggedIntOption(SC.minCommitsOption, SC.minCommitsVar, 2, SC.minCommitsMessage, true);
 				
 		JSAP parser = new JSAP();
 		try {

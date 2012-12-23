@@ -28,8 +28,7 @@ public class SC {
 	public static String maxDownloadTimeOpt = "max-download-time";
 	public static String updateFrequencyOpt = "update-frequency";	
 	public static String maxProjectOpt = "max-project";
-	public static String downloaderOption = "downloader-jar";
-	
+	public static String downloaderOption = "downloader-jar";	
 		
 	/* Command option variables */
 	static public String helpVar = "help";

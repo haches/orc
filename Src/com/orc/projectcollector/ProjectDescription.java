@@ -192,7 +192,14 @@ public class ProjectDescription {
 	}
 
 	public void setLanguage(String language) {
-		this.language = language;
+		String lan = language.toLowerCase();
+		if(lan.equals("csharp")) {
+			lan = "c#";
+		}
+		if(lan.equals("fsharp")) {
+			lan = "f#";
+		}
+		this.language = lan;
 	}
 	
 	public String getOwner() {
