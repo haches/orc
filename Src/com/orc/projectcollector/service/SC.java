@@ -16,7 +16,7 @@ public class SC {
 	static public String helpOption = "help";
 	static public String projectOption = "project"; 
 	static public String outputOption = "output";
-	static public String minCommitsOption = "min-commits";	
+	static public String minCommitsOption = "min-revision";	
 	
 	static public String urlOption = "url";
 	static public String createDateOption = "create-date";

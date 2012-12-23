@@ -116,7 +116,7 @@ public class CodeplexProjectCollector extends ProjectCollector {
 			prj.setPageViews(pageViews);
 			prj.setDownloads(downloads);
 			prj.setContributors(contributors);
-			prj.setCreatedDate(createdDate);
+			prj.setCreatedDate(createdDate);			
 			prjs.add(prj);						
 		}
 		receiver.receive(prjs);

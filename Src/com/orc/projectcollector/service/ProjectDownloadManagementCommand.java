@@ -63,17 +63,21 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			int maxProjects = config.getInt(SC.maxProjectVal);
 			String language = config.getString(SC.languageVar);
 			String downloader = config.getString(SC.downloaderVal);
-			performDownloading(parallelJobs, maxDownloadTime, updateFrequency, folder, language, maxProjects, downloader);
+			String platform = null;
+			if(config.contains(SC.platformVar)) {
+				platform = config.getString(SC.platformVar);
+			}
+			performDownloading(parallelJobs, maxDownloadTime, updateFrequency, folder, language, maxProjects, downloader, platform);
 		}
 	}
 	
-	private void performDownloading(int maxDownloaders, int maxDownloadTime, int updateFrequency, String folder, String language, int maxProjects, String downloader) {
+	private void performDownloading(int maxDownloaders, int maxDownloadTime, int updateFrequency, String folder, String language, int maxProjects, String downloader, String platform) {
 		int downloadedProjects = 0;
 		while(true) {
 			// Launch more downloading processor if necessary.
 			if(maxDownloaders > downloaders.size()) {
 				if(maxProjects==0 || maxProjects > downloadedProjects) {
-					LinkedList<Process> processes = getDownloaderProcesses(maxDownloaders - downloaders.size(), updateFrequency, folder, language, downloader);
+					LinkedList<Process> processes = getDownloaderProcesses(maxDownloaders - downloaders.size(), updateFrequency, folder, language, downloader, platform);
 					downloadedProjects += processes.size();
 					for(Process p : processes) {
 						Calendar now = Calendar.getInstance();
@@ -146,12 +150,12 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 	 * @param downloader The path to the downloader jar file.
 	 * @return The list of downloading processes that have been started.
 	 */
-	private LinkedList<Process> getDownloaderProcesses(int count, int updateFrequency, String folder, String language, String downloader) {
+	private LinkedList<Process> getDownloaderProcesses(int count, int updateFrequency, String folder, String language, String downloader, String platformName) {
 		LinkedList<Process> result = new LinkedList<Process>();
 		String now = DateUtil.getNowDate();
 		String query = 
 			"SELECT platform, name, created_date, version_control, source_link FROM projects WHERE " + 
-			"language = '" + language + "' AND NOT source_link IS NULL AND " + " created_date IS NOT NULL AND " +  
+			"language = '" + language + "' AND NOT source_link IS NULL AND " + " created_date IS NOT NULL AND " +  (platformName == null ? "" : " platform='" + platformName + "' AND ") +
 	        "(source_updated_date IS NULL OR DATEDIFF(source_updated_date, '" + now + "') > " + String.valueOf(updateFrequency) + ") LIMIT " + String.valueOf(count);
 		
 		
@@ -175,7 +179,6 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 				String sourceLink = rs.getString(5);
 				ProcessBuilder pb = getProcessBuilder(folder, platform, project, createDate, versionControl, sourceLink, downloader);
 				pBuilders.add(pb);
-				
 				String[] row = new String[] {
 					platform,
 					project,
@@ -207,6 +210,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			" --project " + project + 
 			" --url " + sourceLink + " --create-date " + createDate + 
 			" --folder " + folder + " --version-control " + versionControl;
+		System.out.println(cmd);
 		String[] command = getCommand(cmd); 	
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(folder));		        
@@ -223,7 +227,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 		FlaggedOption languageOpt = OptionFactory.flaggedOption(SC.languageOption, SC.languageVar, "C#", SC.languageMessage, true);
 		FlaggedOption maxProjectOpt = OptionFactory.flaggedIntOption(SC.maxProjectOpt, SC.maxProjectVal, 0, SC.maxProjectMessage, true);
 		FlaggedOption downloaderOpt = OptionFactory.flaggedOption(SC.downloaderOption, SC.downloaderVal, SC.downloaderMessage, true);
-		
+		FlaggedOption platformOpt = OptionFactory.flaggedOption(SC.platformOption, SC.platformVar, SC.platformMessage2, false);
 		FlaggedOption logDirFlag =
 				new FlaggedOption(SC.logDirVar)
 				.setLongFlag(SC.logDirectionOption)
@@ -239,6 +243,7 @@ public class ProjectDownloadManagementCommand extends PlatformCommand {
 			parser.registerParameter(languageOpt);
 			parser.registerParameter(maxProjectOpt);
 			parser.registerParameter(downloaderOpt);
+			parser.registerParameter(platformOpt);
 			OptionFactory.registerDatabaseOptions(parser);
 			OptionFactory.registerHelpOption(parser);
 		}catch(Exception e) {

@@ -77,7 +77,8 @@ public class GithubProjectCollector extends ProjectCollector {
 				prj.setCreatedDate(pDate);
 				prj.setOwner(pOwner);
 				prj.setName(pOwner + "/" + pName);
-				projects.add(prj);
+				prj.setVersionControlType("git");
+				projects.add(prj);				
 				if(projects.size()>10000) {
 					receiver.receive(projects);
 					projects = new LinkedList<ProjectDescription>();
