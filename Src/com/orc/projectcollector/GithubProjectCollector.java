@@ -1,24 +1,14 @@
 package com.orc.projectcollector;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
-
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.javautilities.database.DbUtil;
-import com.javautilities.date.DateUtil;
 import com.javautilities.logging.LogUtil;
 import com.orc.projectcollector.service.VersionControlNames;
-import com.orc.utilities.Logging;
 
 public class GithubProjectCollector extends ProjectCollector {
 	

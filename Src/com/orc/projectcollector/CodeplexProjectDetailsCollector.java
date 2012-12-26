@@ -44,7 +44,6 @@ public class CodeplexProjectDetailsCollector extends ProjectDetailsCollector {
 		Elements dates = doc.select("div#current_rating span.smartDate");
 		if(dates.size() > 0) {
 			Element date = dates.get(0);
-			String dateStr = date.attr("title");
 			long ticks = Integer.valueOf(date.attr("localtimeticks"));
 			Calendar c = Calendar.getInstance();
 			c.setTimeInMillis(ticks*1000);

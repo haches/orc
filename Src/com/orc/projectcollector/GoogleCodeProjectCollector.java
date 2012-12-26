@@ -5,18 +5,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.LinkedList;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import com.orc.utilities.Logging;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 
 public class GoogleCodeProjectCollector extends ProjectCollector {
 	

@@ -8,10 +8,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map.Entry;
-
 import com.javautilities.database.DbUtil;
 import com.javautilities.database.manager.CommitMode;
 import com.javautilities.database.manager.DataManager;

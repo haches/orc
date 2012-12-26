@@ -122,7 +122,6 @@ public class BitbucketProjectCollector extends ProjectCollector {
 		try {
 			Document dom = Jsoup.connect(firstUrl).get();
 			Elements header = dom.select("section#repo-list > h1");
-			String text = header.get(0).text();
 			String[] words = header.text().split(" ");
 			int prjCount = Integer.valueOf(words[1]);
 			int pageCount = prjCount / 10 + 1;

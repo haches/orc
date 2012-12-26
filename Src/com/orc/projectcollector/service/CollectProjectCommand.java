@@ -271,7 +271,7 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 					"contributors",
 					"timestamp"
 				}, 
-				CommitMode.InsertOrElseUpdate, con, logger);
+				CommitMode.InsertOrElseIgnore, con, logger);
 			String now = DateUtil.getNowDate();
 			
 			for(ProjectDescription p : projects) {
@@ -300,8 +300,59 @@ public class CollectProjectCommand extends PlatformCommand implements IProjectOb
 						now
 					};
 				tbl.addRow(row);
-			}
-			dm.AddTableAndCommit(tbl, con, logger);			
+			}			
+			dm.AddTableAndCommit(tbl, con, logger);
+			
+			// This performs the update without the created_date column. Because Googlecode does not have project created_date,
+			// we use the download date to approximate the created_date, so we need to keep download date the same.
+			DataTable tbl2 = DataManagerUtility.newDataTable("osprojects", "projects", 
+					new String[] {
+						"platform",
+						"name",
+						"project_name",
+						"owner",
+						"language",
+						"description",
+						"version_control",
+						"source_link",
+						"homepage",
+						"follows",
+						"star",
+						"fork",
+						"labels",
+						"license",
+						"page_views",
+						"downloads",
+						"contributors"
+					}, 
+					CommitMode.Update, con, logger);
+				
+			for(ProjectDescription p : projects) {
+				if(p.getSourceLink()==null || p.getSourceLink().length()==0) {
+					continue;
+				}
+				String[] row = {
+						p.getPlatform(),
+						p.getName(),
+						p.getProjectName(),
+						p.getOwner(),
+						p.getLanguage(),
+						p.getDescription(),
+						p.getVersionControlType(),
+						p.getSourceLink(),
+						p.getHomepage(),
+						String.valueOf(p.getFollow()),
+						String.valueOf(p.getStar()),
+						String.valueOf(p.getFork()),
+						p.getLabelsAsString(),
+						p.getLicense(),
+						String.valueOf(p.getPageViews()),
+						String.valueOf(p.getDownloads()),
+						String.valueOf(p.getContributors())
+					};
+				tbl2.addRow(row);
+			}			
+			dm.AddTableAndCommit(tbl2, con, logger);			
 		}
 		
 		for(ProjectDescription p : projects) {
