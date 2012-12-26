@@ -50,6 +50,12 @@ public class DownloadProjectCommand extends PlatformCommand {
 				File hiddenFolder = new File(folder + File.separator + VersionControlNames.getFolder(versionControl));
 				if(!hiddenFolder.exists()) {
 					isNew = true;
+					try {
+						FileUtils.deleteDirectory(f);
+						FileUtils.forceMkdir(f);
+					} catch (IOException e) {
+						LogUtil.logError(logger, e);
+					}
 				}
 			}
 			
